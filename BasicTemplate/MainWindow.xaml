@@ -1,0 +1,192 @@
+﻿<Window x:Class="BasicTemplate.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BasicTemplate"
+        xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        mc:Ignorable="d"
+        Title="MainWindow"
+        WindowStyle="None"
+        WindowState="Maximized"
+        Height="450"
+        Width="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0"
+              Width="100"
+              Background="{StaticResource PrimaryCustomColor}">
+            <StackPanel VerticalAlignment="Top">
+                <!-- Menu 1-->
+                <StackPanel>
+                    <TextBlock Foreground="White"
+                               FontSize="15"
+                               FontWeight="Bold"
+                               VerticalAlignment="Center"
+                               Margin="5"
+                               Text="Menu 1" />
+                    <Separator Grid.Row="1"
+                               Margin="0,5"
+                               Foreground="White" />
+
+                    <Button Width="Auto"
+                            Height="60"
+                            Style="{StaticResource MaterialDesignFlatLightButton}"
+                            Command="{Binding ChangePageCmd}"
+                            CommandParameter="0">
+                        <StackPanel>
+                            <MaterialDesign:PackIcon Width="24"
+                                                     Height="24"
+                                                     Foreground="WhiteSmoke"
+                                                     HorizontalAlignment="Center"
+                                                     Kind="{Binding PageList[0].PageIcon}" />
+                            <TextBlock Margin="0,5,0,0"
+                                       Foreground="WhiteSmoke"
+                                       HorizontalAlignment="Center"
+                                       FontSize="12"
+                                       Text="{Binding PageList[0].PageName}" />
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+                <StackPanel>
+                    <!-- Menu 2-->
+                    <TextBlock Foreground="White"
+                               FontSize="15"
+                               FontWeight="Bold"
+                               VerticalAlignment="Center"
+                               Margin="5"
+                               Text="Menu 2" />
+                    <Separator Grid.Row="1"
+                               Margin="0,5"
+                               Foreground="White" />
+
+                    <Button Width="Auto"
+                            Height="60"
+                            Style="{StaticResource MaterialDesignFlatLightButton}"
+                            Command="{Binding ChangePageCmd}"
+                            CommandParameter="1">
+                        <StackPanel>
+                            <MaterialDesign:PackIcon Width="24"
+                                                     Height="24"
+                                                     Foreground="WhiteSmoke"
+                                                     HorizontalAlignment="Center"
+                                                     Kind="{Binding PageList[1].PageIcon}" />
+                            <TextBlock Margin="0,5,0,0"
+                                       Foreground="WhiteSmoke"
+                                       HorizontalAlignment="Center"
+                                       FontSize="12"
+                                       Text="{Binding PageList[1].PageName}" />
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+                <StackPanel>
+                    <!-- Menu 3-->
+                    <TextBlock Foreground="White"
+                               FontSize="15"
+                               FontWeight="Bold"
+                               VerticalAlignment="Center"
+                               Margin="5"
+                               Text="Menu 3" />
+                    <Separator Grid.Row="1"
+                               Margin="0,5"
+                               Foreground="White" />
+
+                    <Button Width="Auto"
+                            Height="60"
+                            Style="{StaticResource MaterialDesignFlatLightButton}"
+                            Command="{Binding ChangePageCmd}"
+                            CommandParameter="2">
+                        <StackPanel>
+                            <MaterialDesign:PackIcon Width="24"
+                                                     Height="24"
+                                                     Foreground="WhiteSmoke"
+                                                     HorizontalAlignment="Center"
+                                                     Kind="{Binding PageList[2].PageIcon}" />
+                            <TextBlock Margin="0,5,0,0"
+                                       Foreground="WhiteSmoke"
+                                       HorizontalAlignment="Center"
+                                       FontSize="12"
+                                       Text="{Binding PageList[2].PageName}" />
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </StackPanel>
+
+            <!--Buttom Menu-->
+            <StackPanel VerticalAlignment="Bottom">
+                <Button Width="Auto"
+                        Height="60"
+                        Style="{StaticResource MaterialDesignFlatLightButton}"
+                        Command="{Binding ExitProgramCmd}">
+                    <StackPanel>
+                        <MaterialDesign:PackIcon Width="24"
+                                                 Height="24"
+                                                 Foreground="WhiteSmoke"
+                                                 HorizontalAlignment="Center"
+                                                 Kind="ExitRun" />
+                        <TextBlock Margin="0,5,0,0"
+                                   Foreground="WhiteSmoke"
+                                   HorizontalAlignment="Center"
+                                   FontSize="12"
+                                   Text="종료" />
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+        </Grid>
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <ContentControl Grid.Row="0"
+                            Content="{Binding CurrentPage}" />
+            <Grid Grid.Row="1">
+                <!--Below status line-->
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Separator Grid.Row="0"/>
+                <Grid Grid.Row="1">
+                    <StackPanel Orientation="Horizontal">
+                        <ProgressBar Width="25"
+                                     Height="25"
+                                     Margin="10,0"
+                                     IsIndeterminate="{Binding BelowStatus.BelowCircleEn}"
+                                     Style="{StaticResource MaterialDesignCircularProgressBar}" />
+                        <TextBlock VerticalAlignment="Center"
+                                   FontWeight="Bold"
+                                   FontSize="21"
+                                   Text="{Binding BelowStatus.BelowText}" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal"
+                                HorizontalAlignment="Right">
+                        <Button Width="30"
+                                Height="30"
+                                Command="{Binding RefreshDevCmd}"
+                                Style="{StaticResource MaterialDesignIconForegroundButton}">
+                            <MaterialDesign:PackIcon Kind="Reload"
+                                                     Width="25"
+                                                     Height="25" />
+                        </Button>
+                        <MaterialDesign:PackIcon Width="Auto"
+                                                 Height="Auto"
+                                                 Margin="5"
+                                                 VerticalAlignment="Center"
+                                                 Kind="DeveloperBoard"
+                                                 Foreground="{Binding DeviceStatusColor}" />
+                    </StackPanel>
+                </Grid>
+                <!--Below progressBar-->
+                <ProgressBar Grid.Row="2"
+                             Height="7"
+                             Value="{Binding BelowStatus.BelowBarValue}" />
+            </Grid>
+        </Grid>
+
+    </Grid>
+</Window>

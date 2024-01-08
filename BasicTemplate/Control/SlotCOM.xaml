@@ -1,0 +1,44 @@
+﻿<UserControl x:Class="BasicTemplate.Control.SlotCOM"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BasicTemplate.Control"
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    
+    <Border Height="60"
+            BorderBrush="Black"
+            BorderThickness="2"
+            CornerRadius="5">
+        <Grid>
+            <StackPanel Orientation="Horizontal"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Stretch">
+                <MaterialDesign:PackIcon Margin="10,0"
+                                         Kind="CircleMedium" />
+                <TextBlock FontSize="15"
+                           Text="{Binding SlotText}" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Right">
+                <Button VerticalAlignment="Center"
+                        HorizontalAlignment="Right"
+                        Style="{StaticResource MaterialDesignIconButton}"
+                        Visibility="{Binding DownloadEn}"
+                        Command="{Binding DownloadCmd}">
+                    <MaterialDesign:PackIcon Kind="DownloadOutline" />
+                </Button>
+                <Button VerticalAlignment="Center"
+                        HorizontalAlignment="Right"
+                        Style="{StaticResource MaterialDesignIconButton}"
+                        Visibility="{Binding DeleteEn}"
+                        Command="{Binding DeleteFileCmd}">
+                    <MaterialDesign:PackIcon Kind="TrashCan" />
+                </Button>
+            </StackPanel>
+        </Grid>
+    </Border>
+</UserControl>
