@@ -1,0 +1,79 @@
+﻿<Application x:Class="BasicTemplate.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:Control="clr-namespace:BasicTemplate.Control"
+             xmlns:Page="clr-namespace:BasicTemplate.Page"
+             xmlns:Example="clr-namespace:BasicTemplate.Example"
+             StartupUri="MainWindow.xaml">
+
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <MaterialDesign:CustomColorTheme BaseTheme="Light"
+                                                 PrimaryColor="#004775"
+                                                 SecondaryColor="#007dab" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <SolidColorBrush x:Key="PrimaryCustomColor"
+                             Color="#004775" />
+            <SolidColorBrush x:Key="SecondaryCustomColor"
+                             Color="#007dab" />
+
+            <DataTemplate DataType="{x:Type Page:vmPageCommon}">
+                <Page:PageCommon />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type Page:vmPageGraphControl}">
+                <Page:PageGraphControl />
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type Control:vmExampleSlot}">
+                <Control:ExampleSlot />
+            </DataTemplate>
+
+
+            <DataTemplate DataType="{x:Type Example:vmExampleBasicPlot}">
+                <Example:ExampleBasicPlot />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type Example:vmExampleLivePlot}">
+                <Example:ExampleLivePlot />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type Example:vmExampleLiveChairPlot}">
+                <Example:ExampleLiveChairPlot />
+            </DataTemplate>
+
+            <!-- Low opacity FAB -->
+            <Style x:Key="LoFAB" TargetType="{x:Type Button}"
+                       BasedOn="{StaticResource MaterialDesignFloatingActionButton}">
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver"
+                                 Value="True">
+                        <Setter Property="Opacity"
+                                    Value="1" />
+                    </Trigger>
+                    <Trigger Property="IsMouseOver"
+                                 Value="False">
+                        <Setter Property="Opacity"
+                                    Value="0.3" />
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
+            <!-- Integer-only textbox-->
+            <Style x:Key="IntonlyTextbox"
+                   TargetType="{x:Type TextBox}"
+                   BasedOn="{StaticResource MaterialDesignOutlinedTextBox}">
+                <EventSetter Event="PreviewTextInput"
+                             Handler="PreviewTextInput" />
+                <Setter Property="TextAlignment"
+                        Value="Right" />
+                <Setter Property="MaterialDesign:TextFieldAssist.HasClearButton"
+                        Value="True" />
+                <Setter Property="MaterialDesign:HintAssist.FloatingScale"
+                        Value="1.1" />
+            </Style>
+
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>
