@@ -28,8 +28,8 @@
                 <Page:PageGraphControl />
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type Control:vmExampleSlot}">
-                <Control:ExampleSlot />
+            <DataTemplate DataType="{x:Type Control:vmSlotExample}">
+                <Control:SlotExample />
             </DataTemplate>
 
 
@@ -56,6 +56,19 @@
                                  Value="False">
                         <Setter Property="Opacity"
                                     Value="0.3" />
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
+            <!-- Check selection validation -->
+            <Style x:Key="SelectValidCombo"
+                   TargetType="{x:Type ComboBox}"
+                   BasedOn="{StaticResource MaterialDesignOutlinedComboBox}">
+                <Style.Triggers>
+                    <Trigger Property="SelectedItem"
+                             Value="{x:Null}">
+                        <Setter Property="Foreground"
+                                Value="Crimson" />
                     </Trigger>
                 </Style.Triggers>
             </Style>

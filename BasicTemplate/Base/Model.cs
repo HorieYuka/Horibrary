@@ -6,28 +6,22 @@ using System.Threading.Tasks;
 
 namespace BasicTemplate.Base
 {
-    class ModelSlotBase : ObservableObject
+    class ModelBase : ObservableObject
     {
-        // Insert common slot properties here.
-
-        public string SlotText { get; set; }
-
+        // Insert common  properties here.
     }
 
-    class ModelSlotCOM : ModelSlotBase
+    class ModelCOM : ModelBase
     {
-        public EventHandler ConnectEvt;
-        public EventHandler DisconnectEvt;
-
         public bool IsConnected { get; set; }
 
-        public string PortNum { get; set; }
-        public string PortName { get; set; }
-        public int Boadrate { get; set; }
+        public string Port { get; set; }
+        public string Name { get; set; }
+        public int Baudrate { get; set; }
 
     }
 
-    class BelowStatusModel : ObservableObject
+    class BelowStatusModel : ModelBase
     {
         private int? _BelowBar;
         public int? BelowBar

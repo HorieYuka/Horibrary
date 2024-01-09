@@ -18,8 +18,37 @@
                         HorizontalAlignment="Stretch">
                 <MaterialDesign:PackIcon Margin="10,0"
                                          Kind="CircleMedium" />
-                <TextBlock FontSize="15"
-                           Text="{Binding SlotText}" />
+                <StackPanel>
+                    <TextBlock FontSize="18"
+                               Text="{Binding SlotText}" />
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock FontSize="15"
+                                   Text="{Binding ModelCOM.Name}" />
+                        <TextBlock FontSize="15"
+                                   Text=" - " />
+                        <TextBlock FontSize="15"
+                                   Text="{Binding ModelCOM.Port}" />
+                        <TextBlock FontSize="15"
+                                   Text=" - " />
+                        <ComboBox MaterialDesign:HintAssist.Hint="Baudrate"
+                                  SelectedItem="{Binding ModelCOM.Baudrate}"
+                                  Style="{StaticResource MaterialDesignOutlinedComboBox}">
+                            <ComboBoxItem Content="2400" />
+                            <ComboBoxItem Content="4800" />
+                            <ComboBoxItem Content="9600" />
+                            <ComboBoxItem Content="14400" />
+                            <ComboBoxItem Content="19200" />
+                            <ComboBoxItem Content="28800" />
+                            <ComboBoxItem Content="38400" />
+                            <ComboBoxItem Content="57600" />
+                            <ComboBoxItem Content="76800" />
+                            <ComboBoxItem Content="115200" />
+                            <ComboBoxItem Content="230400" />
+                            <ComboBoxItem Content="250000" />
+                        </ComboBox>
+                    </StackPanel>
+
+                </StackPanel>
             </StackPanel>
             <StackPanel Orientation="Horizontal"
                         VerticalAlignment="Center"
@@ -29,14 +58,14 @@
                         Style="{StaticResource MaterialDesignIconButton}"
                         Visibility="{Binding DownloadEn}"
                         Command="{Binding DownloadCmd}">
-                    <MaterialDesign:PackIcon Kind="DownloadOutline" />
+                    <MaterialDesign:PackIcon Kind="Connection" />
                 </Button>
                 <Button VerticalAlignment="Center"
                         HorizontalAlignment="Right"
                         Style="{StaticResource MaterialDesignIconButton}"
                         Visibility="{Binding DeleteEn}"
                         Command="{Binding DeleteFileCmd}">
-                    <MaterialDesign:PackIcon Kind="TrashCan" />
+                    <MaterialDesign:PackIcon Kind="Cancel" />
                 </Button>
             </StackPanel>
         </Grid>

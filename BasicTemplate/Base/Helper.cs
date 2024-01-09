@@ -9,6 +9,8 @@ namespace BasicTemplate.Base
 {
     internal class Helper
     {
+        public const int MaxPlotBuffLength = 100000;
+
         public static EventHandler EvtBelowStatus;
 
         public static void UpdateBelowStatus(bool? _BelowCircle = null, string? _BelowText = null, int? _Belowbar = null)

@@ -75,7 +75,7 @@ namespace BasicTemplate.Page
             ExampleIdx = -1;
             SlotList = new List<ISlot>();
             for (int i = 0; i < ExampleList.Count; i++)
-                SlotList.Add(new vmExampleSlot(ExampleList[i]));
+                SlotList.Add(new vmSlotExample(ExampleList[i]));
 
         }
 
