@@ -7,11 +7,13 @@
              mc:Ignorable="d"
              d:DesignHeight="450"
              d:DesignWidth="800">
-    <GroupBox>
+
+    <GroupBox MaterialDesign:ColorZoneAssist.Mode="SecondaryMid">
         <GroupBox.Header>
             <Grid>
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="{Binding ExampleName}" />
+                    <TextBlock Foreground="White"
+                               Text="{Binding ExampleName}" />
                 </StackPanel>
             </Grid>
         </GroupBox.Header>
@@ -70,6 +72,8 @@
                     <ColumnDefinition />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0"
+                           Text="{Binding test}" />
                 <StackPanel Grid.Column="1">
                     <TextBox Padding="10"
                              Margin="0,5"

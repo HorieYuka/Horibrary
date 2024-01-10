@@ -35,10 +35,14 @@ namespace BasicTemplate.Example
 
         public WpfPlot sPlot { get; set; }
 
+
         public vmExampleLivePlot()
         {
             // Create plot
             sPlot = new WpfPlot();
+
         }
+
+
     }
 }

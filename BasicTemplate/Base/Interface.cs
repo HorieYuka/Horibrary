@@ -18,8 +18,10 @@ namespace BasicTemplate.Base
     {
         string ExampleName { get; }
         short ExampleNum { get; }
+
     }
 
     interface ISlot
-    { }
+    { 
+    }
 }

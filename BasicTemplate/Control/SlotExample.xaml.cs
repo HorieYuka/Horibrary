@@ -30,7 +30,9 @@ namespace BasicTemplate.Control
 
     class vmSlotExample : ObservableObject, ISlot
     {
-        public string SlotText { get; set; }
+        public string SlotText { get; }
+
+        public int SlotNum { get;}
 
         private SolidColorBrush _SlotBackground;
         public SolidColorBrush SlotBackground
@@ -40,21 +42,6 @@ namespace BasicTemplate.Control
             {
                 _SlotBackground = value;
                 OnPropertyChanged("SlotBackground");
-            }
-        }
-
-        private ICommand _DeleteSlotCmd;
-        public ICommand DeleteSlotCmd
-        {
-            get
-            {
-                if (_DeleteSlotCmd == null)
-                {
-                    _DeleteSlotCmd = new BaseCommand(p =>
-                    {
-                    });
-                }
-                return _DeleteSlotCmd;
             }
         }
 
@@ -75,6 +62,7 @@ namespace BasicTemplate.Control
         public vmSlotExample(IExample _ExampleInfo)
         {
             SlotText = _ExampleInfo.ExampleName;
+            SlotNum = _ExampleInfo.ExampleNum;
         }
 
 

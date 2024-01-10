@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Management;
 using System.Reflection;
 using System.Reflection.Metadata;
 using System.Runtime.CompilerServices;
@@ -47,6 +48,9 @@ namespace BasicTemplate.Example
 
         private double[] PlotDataBuffer;
 
+        private DispatcherTimer _updateDataTimer;
+
+
         private bool _bTrigger;
         public bool bTrigger
         {
@@ -71,8 +75,6 @@ namespace BasicTemplate.Example
         int nextDataIndex = 1;
 
         private BackgroundWorker bWorker;
-        private DispatcherTimer _updateDataTimer;
-        private DispatcherTimer _renderTimer;
 
         private ICommand _CreatePlotCmd;
         public ICommand CreatePlotCmd
@@ -82,7 +84,7 @@ namespace BasicTemplate.Example
                 if (_CreatePlotCmd == null)
                     _CreatePlotCmd = new BaseCommand(p => {
 
-                        if(bTrigger == false)
+                        if (bTrigger == false)
                         {
                             // Check values
                             int Value = 0;
@@ -94,17 +96,17 @@ namespace BasicTemplate.Example
 
 
                             bTrigger = true;
+                            PlotDataBuffer = new double[Helper.MaxPlotBuffLength];
+                            PlotBase.Refresh();
+
                             // create a timer to modify the data
                             _updateDataTimer = new DispatcherTimer();
-                            _updateDataTimer.Interval = TimeSpan.FromMilliseconds(1);
+                            _updateDataTimer.Interval = TimeSpan.FromMilliseconds(100);
                             _updateDataTimer.Tick += UpdateData;
                             _updateDataTimer.Start();
 
                             // create a timer to update the GUI
-                            _renderTimer = new DispatcherTimer();
-                            _renderTimer.Interval = TimeSpan.FromMilliseconds(20);
-                            _renderTimer.Tick += Render;
-                            _renderTimer.Start();
+                            bWorker.RunWorkerAsync();
                         }
                         else
                             bTrigger = false;
@@ -117,29 +119,44 @@ namespace BasicTemplate.Example
 
         private void RunLivePlot(object? sender, DoWorkEventArgs e)
         {
+
             List<double> Stack = new List<double>();
 
             Stopwatch Sw = new Stopwatch();
             RandomDataGenerator Ran = new RandomDataGenerator();
 
+
             int SampleValue = int.Parse(PresetSample);
             int TimeValue = int.Parse(PresetTime);
-
+            int Count = 0;
 
             Sw.Start();
             while (bTrigger && Sw.Elapsed.TotalMinutes < TimeValue)
             {
-                Stack.AddRange(Ran.RandomSample(SampleValue));
-                
-                if(Stack.Count > Helper.MaxPlotBuffLength)
-                {
-                    Stack.RemoveRange(0, (Stack.Count() - Helper.MaxPlotBuffLength));
-                    Array.Copy(Stack.ToArray(), PlotDataBuffer, Helper.MaxPlotBuffLength);
-                }
-                else
-                    Array.Copy(Stack.ToArray(), PlotDataBuffer, Stack.Count());
+                /*
+Stack.AddRange(Ran.RandomSample(SampleValue));
 
+if (Stack.Count > Helper.MaxPlotBuffLength)
+{
+    Stack.RemoveRange(0, (Stack.Count() - Helper.MaxPlotBuffLength));
+    Array.Copy(Stack.ToArray(), PlotDataBuffer, Helper.MaxPlotBuffLength);
+    //Sigplot.MaxRenderIndex = Helper.MaxPlotBuffLength;
+}
+else
+{
+    Array.Copy(Stack.ToArray(), PlotDataBuffer, Stack.Count());
+
+}
+
+Sigplot.MaxRenderIndex = Helper.MaxPlotBuffLength - 1;
+*/
+
+                UiInvoke(delegate { PlotBase.Refresh(); });
+                Thread.Sleep(100);
+
+  
             }
+
         }
 
         public vmExampleLiveChairPlot()
@@ -149,11 +166,12 @@ namespace BasicTemplate.Example
 
             // InitializePlot
             PlotDataBuffer = new double[Helper.MaxPlotBuffLength];
-            Sigplot =  PlotBase.Plot.AddSignal(PlotDataBuffer);
+            Sigplot = PlotBase.Plot.AddSignal(PlotDataBuffer);
+            Sigplot.MaxRenderIndex = 0;
             PlotBase.Refresh();
 
             // Set default value
-            PresetSample = "5000";
+            PresetSample = "1";
             PresetTime = "10";
 
             // Set Background thread
@@ -161,28 +179,12 @@ namespace BasicTemplate.Example
             bWorker.DoWork += RunLivePlot;
 
 
-
         }
 
-        void Render(object sender, EventArgs e)
-        {
-  
-            PlotBase.Refresh();
-        }
-        Random rand = new Random(0);
+
+        Random rand = new Random();
         void UpdateData(object sender, EventArgs e)
         {
-            if (nextDataIndex >= PlotDataBuffer.Length)
-            {
-                throw new OverflowException("data array isn't long enough to accomodate new data");
-                // in this situation the solution would be:
-                //   1. clear the plot
-                //   2. create a new larger array
-                //   3. copy the old data into the start of the larger array
-                //   4. plot the new (larger) array
-                //   5. continue to update the new array
-            }
-
             double randomValue = Math.Round(rand.NextDouble() - .5, 3);
             double latestValue = PlotDataBuffer[nextDataIndex - 1] + randomValue;
             PlotDataBuffer[nextDataIndex] = latestValue;
@@ -191,4 +193,7 @@ namespace BasicTemplate.Example
         }
 
     }
+
+
+
 }

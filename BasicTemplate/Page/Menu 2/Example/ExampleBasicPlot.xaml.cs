@@ -33,7 +33,7 @@ namespace BasicTemplate.Example
         public string ExampleName => "기본적인 그래프 생성하기";
         public short ExampleNum => 0;
 
-        public WpfPlot sPlot { get; set; }
+        public WpfPlot PlotBase { get; set; }
 
         public string SampleCount { get; set; }
 
@@ -45,7 +45,7 @@ namespace BasicTemplate.Example
                 if (_CreatePlotCmd == null)
                     _CreatePlotCmd = new BaseCommand(p => {
 
-                        sPlot.Plot.Clear();
+                        PlotBase.Plot.Clear();
 
                         int Value = 0;
                         if (!int.TryParse(SampleCount, out Value))
@@ -57,8 +57,8 @@ namespace BasicTemplate.Example
                         RandomDataGenerator Ran = new RandomDataGenerator();
                         double[] Samples = Ran.RandomSample(Value);
 
-                        sPlot.Plot.AddSignal(Samples);
-                        sPlot.Render();
+                        PlotBase.Plot.AddSignal(Samples);
+                        PlotBase.Render();
 
                         Helper.UpdateBelowStatus(null, "샘플링 갯수 : " + Value , null);
                     });
@@ -69,11 +69,12 @@ namespace BasicTemplate.Example
         public vmExampleBasicPlot()
         {
             // Create plot
-            sPlot = new WpfPlot();
+            PlotBase = new WpfPlot();
 
             // Set default value
             SampleCount = "5000";
         }
+
 
 
     }
