@@ -48,8 +48,6 @@ namespace BasicTemplate.Example
 
         private double[] PlotDataBuffer;
 
-        private DispatcherTimer _updateDataTimer;
-
 
         private bool _bTrigger;
         public bool bTrigger
@@ -96,14 +94,9 @@ namespace BasicTemplate.Example
 
 
                             bTrigger = true;
-                            PlotDataBuffer = new double[Helper.MaxPlotBuffLength];
+                            //PlotDataBuffer = new double[Helper.MaxPlotBuffLength];
                             PlotBase.Refresh();
 
-                            // create a timer to modify the data
-                            _updateDataTimer = new DispatcherTimer();
-                            _updateDataTimer.Interval = TimeSpan.FromMilliseconds(100);
-                            _updateDataTimer.Tick += UpdateData;
-                            _updateDataTimer.Start();
 
                             // create a timer to update the GUI
                             bWorker.RunWorkerAsync();
@@ -151,13 +144,16 @@ else
 Sigplot.MaxRenderIndex = Helper.MaxPlotBuffLength - 1;
 */
 
+                PlotDataBuffer[Count] = Math.Round(rand.NextDouble() - .5, 3);
+                Sigplot.MaxRenderIndex = Count;
                 UiInvoke(delegate { PlotBase.Refresh(); });
-                Thread.Sleep(100);
+                Thread.Sleep(50);
 
-  
+                Count++;
             }
 
         }
+        Random rand = new Random();
 
         public vmExampleLiveChairPlot()
         {
@@ -179,17 +175,6 @@ Sigplot.MaxRenderIndex = Helper.MaxPlotBuffLength - 1;
             bWorker.DoWork += RunLivePlot;
 
 
-        }
-
-
-        Random rand = new Random();
-        void UpdateData(object sender, EventArgs e)
-        {
-            double randomValue = Math.Round(rand.NextDouble() - .5, 3);
-            double latestValue = PlotDataBuffer[nextDataIndex - 1] + randomValue;
-            PlotDataBuffer[nextDataIndex] = latestValue;
-            Sigplot.MaxRenderIndex = nextDataIndex;
-            nextDataIndex += 1;
         }
 
     }
