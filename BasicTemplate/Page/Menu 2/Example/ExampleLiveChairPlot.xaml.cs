@@ -45,9 +45,13 @@ namespace BasicTemplate.Example
         private SignalPlot Sigplot;
 
         public string PresetSample { get; set; }
+        public string PresetTime { get; set; }
+        public string CustomX { get; set; }
+        public bool bIsCustomXEnable { get; set; }
+
+
 
         private double[] PlotDataBuffer;
-
 
         private bool _bTrigger;
         public bool bTrigger
@@ -60,17 +64,8 @@ namespace BasicTemplate.Example
             }
         }
 
-        private string _PresetTime;
-        public string PresetTime
-        {
-            get => _PresetTime;
-            set
-            {
-                _PresetTime = value;
-                OnPropertyChanged("PresetTime");
-            }
-        }
-        int nextDataIndex = 1;
+
+
 
         private BackgroundWorker bWorker;
 
@@ -80,7 +75,8 @@ namespace BasicTemplate.Example
             get
             {
                 if (_CreatePlotCmd == null)
-                    _CreatePlotCmd = new BaseCommand(p => {
+                    _CreatePlotCmd = new BaseCommand(p =>
+                    {
 
                         if (bTrigger == false)
                         {
@@ -92,11 +88,8 @@ namespace BasicTemplate.Example
                                 return;
                             }
 
-
                             bTrigger = true;
-                            //PlotDataBuffer = new double[Helper.MaxPlotBuffLength];
                             PlotBase.Refresh();
-
 
                             // create a timer to update the GUI
                             bWorker.RunWorkerAsync();
@@ -112,48 +105,45 @@ namespace BasicTemplate.Example
 
         private void RunLivePlot(object? sender, DoWorkEventArgs e)
         {
-
             List<double> Stack = new List<double>();
 
             Stopwatch Sw = new Stopwatch();
             RandomDataGenerator Ran = new RandomDataGenerator();
 
-
             int SampleValue = int.Parse(PresetSample);
             int TimeValue = int.Parse(PresetTime);
-            int Count = 0;
 
             Sw.Start();
             while (bTrigger && Sw.Elapsed.TotalMinutes < TimeValue)
             {
-                /*
-Stack.AddRange(Ran.RandomSample(SampleValue));
 
-if (Stack.Count > Helper.MaxPlotBuffLength)
-{
-    Stack.RemoveRange(0, (Stack.Count() - Helper.MaxPlotBuffLength));
-    Array.Copy(Stack.ToArray(), PlotDataBuffer, Helper.MaxPlotBuffLength);
-    //Sigplot.MaxRenderIndex = Helper.MaxPlotBuffLength;
-}
-else
-{
-    Array.Copy(Stack.ToArray(), PlotDataBuffer, Stack.Count());
+                Stack.AddRange(Ran.RandomSample(SampleValue));
 
-}
+                if (Stack.Count > Helper.MaxPlotBuffLength)
+                {
+                    Stack.RemoveRange(0, (Stack.Count() - (int) Helper.MaxPlotBuffLength));
+                    Array.Copy(Stack.ToArray(), PlotDataBuffer, (int)Helper.MaxPlotBuffLength);
+                }
+                else
+                    Array.Copy(Stack.ToArray(), PlotDataBuffer, Stack.Count());
 
-Sigplot.MaxRenderIndex = Helper.MaxPlotBuffLength - 1;
-*/
+                Sigplot.MaxRenderIndex = Stack.Count() - 1;
 
-                PlotDataBuffer[Count] = Math.Round(rand.NextDouble() - .5, 3);
-                Sigplot.MaxRenderIndex = Count;
+                if(!bIsCustomXEnable)
+                    PlotBase.Plot.AxisAuto();
+                else
+                {
+                    PlotBase.Plot.AxisAutoY();
+                    PlotBase.Plot.SetAxisLimitsX(Math.Max(0, Sigplot.MaxRenderIndex - double.Parse(CustomX)), Math.Max(1, Sigplot.MaxRenderIndex));
+                }
+
+
                 UiInvoke(delegate { PlotBase.Refresh(); });
                 Thread.Sleep(50);
-
-                Count++;
             }
 
         }
-        Random rand = new Random();
+
 
         public vmExampleLiveChairPlot()
         {
@@ -161,7 +151,7 @@ Sigplot.MaxRenderIndex = Helper.MaxPlotBuffLength - 1;
             PlotBase = new WpfPlot();
 
             // InitializePlot
-            PlotDataBuffer = new double[Helper.MaxPlotBuffLength];
+            PlotDataBuffer = new double[(int)Helper.MaxPlotBuffLength];
             Sigplot = PlotBase.Plot.AddSignal(PlotDataBuffer);
             Sigplot.MaxRenderIndex = 0;
             PlotBase.Refresh();
@@ -169,6 +159,7 @@ Sigplot.MaxRenderIndex = Helper.MaxPlotBuffLength - 1;
             // Set default value
             PresetSample = "1";
             PresetTime = "10";
+            CustomX = "100";
 
             // Set Background thread
             bWorker = new BackgroundWorker();
