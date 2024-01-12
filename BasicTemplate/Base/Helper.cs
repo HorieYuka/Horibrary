@@ -4,12 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Data;
 
 namespace BasicTemplate.Base
 {
     internal class Helper
     {
-        public const int MaxPlotBuffLength = 100000;
+        public const double MaxPlotBuffLength = 100000;
 
         public static EventHandler EvtBelowStatus;
 
@@ -25,5 +27,41 @@ namespace BasicTemplate.Base
                 EvtBelowStatus.Invoke(Md, new EventArgs());
         }
 
+        public static MessageBoxResult ClaimMessBox(string Header, string Comment,
+            MessageBoxButton Btn, MessageBoxImage Img)
+              => MessageBox.Show(Comment, Header, Btn, Img);
+
+        public static MessageBoxResult ClaimWaitMessBox(string Header, string Comment,
+            MessageBoxButton Btn, MessageBoxImage Img)
+        {
+            MessageBoxResult Result = new MessageBoxResult();
+
+            Task.Run(() =>
+            Result = ClaimMessBox(Header, Comment,
+            MessageBoxButton.OK, MessageBoxImage.Question));
+
+            return Result;
+        }
+
+    }
+
+    [ValueConversion(typeof(bool), typeof(bool))]
+    public class InverseBooleanConverter : IValueConverter
+    {
+        #region IValueConverter Members
+
+        public object Convert(object value, Type targetType, object parameter,
+            System.Globalization.CultureInfo culture)
+        {
+            return !(bool)value;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter,
+            System.Globalization.CultureInfo culture)
+        {
+            throw new NotSupportedException();
+        }
+
+        #endregion
     }
 }
