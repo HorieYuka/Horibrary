@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:Interact="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:Base="clr-namespace:BasicTemplate.Base"
              mc:Ignorable="d"
              d:DesignHeight="450"
@@ -82,7 +83,7 @@
                     <StackPanel Margin="5">
                         <Grid>
                             <CheckBox x:Name="Ck_Xaxis"
-                                      IsChecked="{Binding bIsCustomXEnable}">
+                                      IsChecked="{Binding Model.bIsCustomXEnable}">
                                 <TextBlock FontSize="14"
                                            FontWeight="Bold"
                                            Text="X축 표현 갯수 설정" />
@@ -95,7 +96,13 @@
                                      Background="White"
                                      IsEnabled="{Binding IsChecked, ElementName=Ck_Xaxis}"
                                      Style="{StaticResource IntonlyTextbox}"
-                                     Text="{Binding Value, ElementName=S_Xaxis}">
+                                     Text="{Binding Value, ElementName=S_Xaxis, UpdateSourceTrigger=LostFocus}">
+                                <Interact:Interaction.Triggers>
+                                    <Interact:EventTrigger EventName="LostFocus">
+                                        <Interact:InvokeCommandAction Command="{Binding CheckValueCmd}"
+                                                                      CommandParameter="{Binding }"/>
+                                    </Interact:EventTrigger>
+                                </Interact:Interaction.Triggers>
                             </TextBox>
                         </Grid>
                         <Separator Margin="0,5" />
@@ -105,8 +112,8 @@
                                 TickFrequency="1"
                                 IsEnabled="{Binding IsChecked, ElementName=Ck_Xaxis}"
                                 Minimum="1"
-                                Maximum="10000"
-                                Value="{Binding CustomX}" />
+                                Maximum="{x:Static Base:Constants.CustomXaxisLength}"
+                                Value="{Binding Model.CustomX}" />
                     </StackPanel>
                 </StackPanel>
             </Grid>
@@ -136,7 +143,7 @@
                                      Width="100"
                                      Background="White"
                                      Style="{StaticResource IntonlyTextbox}"
-                                     Text="{Binding Value, ElementName=S_PresetSample}" />
+                                     Text="{Binding Value, ElementName=S_PresetSample, UpdateSourceTrigger=LostFocus}" />
                         </Grid>
                         <Separator Margin="0,5" />
                         <Slider x:Name="S_PresetSample"
@@ -144,8 +151,8 @@
                                 IsSnapToTickEnabled="True"
                                 TickFrequency="1"
                                 Minimum="1"
-                                Maximum="{x:Static Base:Helper.MaxPlotBuffLength}"
-                                Value="{Binding PresetSample}" />
+                                Maximum="{x:Static Base:Constants.MaxPlotBuffLength}"
+                                Value="{Binding Model.PresetSample}" />
                     </StackPanel>
                     <StackPanel Margin="5">
                         <Grid>
@@ -160,7 +167,7 @@
                                      Width="100"
                                      Background="White"
                                      Style="{StaticResource IntonlyTextbox}"
-                                     Text="{Binding Value, ElementName=S_PresetTime}" />
+                                     Text="{Binding Value, ElementName=S_PresetTime, UpdateSourceTrigger=LostFocus}" />
                         </Grid>
                         <Separator Margin="0,5" />
                         <Slider x:Name="S_PresetTime"
@@ -168,8 +175,8 @@
                                 IsSnapToTickEnabled="True"
                                 TickFrequency="1"
                                 Minimum="1"
-                                Maximum="60"
-                                Value="{Binding PresetTime}" />
+                                Maximum="{x:Static Base:Constants.MeasureTimeLimit}"
+                                Value="{Binding Model.PresetTime}" />
                     </StackPanel>
                 </StackPanel>
             </Grid>

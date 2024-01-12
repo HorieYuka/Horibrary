@@ -9,9 +9,8 @@ using System.Windows.Data;
 
 namespace BasicTemplate.Base
 {
-    internal class Helper
+    class Helper
     {
-        public const double MaxPlotBuffLength = 100000;
 
         public static EventHandler EvtBelowStatus;
 
@@ -46,7 +45,7 @@ namespace BasicTemplate.Base
     }
 
     [ValueConversion(typeof(bool), typeof(bool))]
-    public class InverseBooleanConverter : IValueConverter
+    class InverseBooleanConverter : IValueConverter
     {
         #region IValueConverter Members
 
@@ -63,5 +62,12 @@ namespace BasicTemplate.Base
         }
 
         #endregion
+    }
+
+    static class Constants
+    {
+        public const double  MaxPlotBuffLength = 100000;
+        public const double MeasureTimeLimit = 60;
+        public const double CustomXaxisLength = 10000;
     }
 }

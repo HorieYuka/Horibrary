@@ -38,19 +38,14 @@ namespace BasicTemplate.Example
 
     class vmExampleLiveChairPlot : ObservableObject, IExample
     {
-        public string ExampleName => "실시간 그래프 생성하기";
-        public short ExampleNum => 1;
+        public string ExampleName => "실시간 그래프, 크로스 헤어 생성하기";
+        public short ExampleNum => 2;
 
+        public ModelPlot Model { get; set; }
         public WpfPlot PlotBase { get; set; }
+
         private SignalPlot Sigplot;
-
-        public string PresetSample { get; set; }
-        public string PresetTime { get; set; }
-        public string CustomX { get; set; }
-        public bool bIsCustomXEnable { get; set; }
-
-
-
+        private BackgroundWorker bWorker;
         private double[] PlotDataBuffer;
 
         private bool _bTrigger;
@@ -65,10 +60,6 @@ namespace BasicTemplate.Example
         }
 
 
-
-
-        private BackgroundWorker bWorker;
-
         private ICommand _CreatePlotCmd;
         public ICommand CreatePlotCmd
         {
@@ -81,8 +72,7 @@ namespace BasicTemplate.Example
                         if (bTrigger == false)
                         {
                             // Check values
-                            int Value = 0;
-                            if (!int.TryParse(PresetSample, out Value) || !int.TryParse(PresetTime, out Value))
+                            if (!Model.ValidateValue())
                             {
                                 Helper.UpdateBelowStatus(null, "입력값에 오류가 있습니다.", null);
                                 return;
@@ -110,8 +100,8 @@ namespace BasicTemplate.Example
             Stopwatch Sw = new Stopwatch();
             RandomDataGenerator Ran = new RandomDataGenerator();
 
-            int SampleValue = int.Parse(PresetSample);
-            int TimeValue = int.Parse(PresetTime);
+            int SampleValue = int.Parse(Model.PresetSample);
+            int TimeValue = int.Parse(Model.PresetTime);
 
             Sw.Start();
             while (bTrigger && Sw.Elapsed.TotalMinutes < TimeValue)
@@ -119,24 +109,23 @@ namespace BasicTemplate.Example
 
                 Stack.AddRange(Ran.RandomSample(SampleValue));
 
-                if (Stack.Count > Helper.MaxPlotBuffLength)
+                if (Stack.Count > Constants.MaxPlotBuffLength)
                 {
-                    Stack.RemoveRange(0, (Stack.Count() - (int) Helper.MaxPlotBuffLength));
-                    Array.Copy(Stack.ToArray(), PlotDataBuffer, (int)Helper.MaxPlotBuffLength);
+                    Stack.RemoveRange(0, (Stack.Count() - (int)Constants.MaxPlotBuffLength));
+                    Array.Copy(Stack.ToArray(), PlotDataBuffer, (int)Constants.MaxPlotBuffLength);
                 }
                 else
                     Array.Copy(Stack.ToArray(), PlotDataBuffer, Stack.Count());
 
                 Sigplot.MaxRenderIndex = Stack.Count() - 1;
 
-                if(!bIsCustomXEnable)
+                if(!Model.bIsCustomXEnable)
                     PlotBase.Plot.AxisAuto();
                 else
                 {
                     PlotBase.Plot.AxisAutoY();
-                    PlotBase.Plot.SetAxisLimitsX(Math.Max(0, Sigplot.MaxRenderIndex - double.Parse(CustomX)), Math.Max(1, Sigplot.MaxRenderIndex));
+                    PlotBase.Plot.SetAxisLimitsX(Math.Max(0, Sigplot.MaxRenderIndex - double.Parse(Model.CustomX)), Math.Max(1, Sigplot.MaxRenderIndex));
                 }
-
 
                 UiInvoke(delegate { PlotBase.Refresh(); });
                 Thread.Sleep(50);
@@ -151,21 +140,17 @@ namespace BasicTemplate.Example
             PlotBase = new WpfPlot();
 
             // InitializePlot
-            PlotDataBuffer = new double[(int)Helper.MaxPlotBuffLength];
+            PlotDataBuffer = new double[ (int) Constants.MaxPlotBuffLength];
             Sigplot = PlotBase.Plot.AddSignal(PlotDataBuffer);
             Sigplot.MaxRenderIndex = 0;
             PlotBase.Refresh();
 
             // Set default value
-            PresetSample = "1";
-            PresetTime = "10";
-            CustomX = "100";
+            Model = new ModelPlot();
 
             // Set Background thread
             bWorker = new BackgroundWorker();
             bWorker.DoWork += RunLivePlot;
-
-
         }
 
     }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace BasicTemplate.Base
 {
@@ -18,7 +19,73 @@ namespace BasicTemplate.Base
         public string Port { get; set; }
         public string Name { get; set; }
         public int Baudrate { get; set; }
+    }
 
+    class ModelPlot : ModelBase
+    {
+        public bool bIsCustomXEnable { get; set; }
+
+        private string _PresetSample;
+        public string PresetSample
+
+        {
+            get => _PresetSample;
+            set
+            {
+                _PresetSample = value;
+                OnPropertyChanged("PresetSample");
+            }
+        }
+
+        private string _PresetTime;
+        public string PresetTime
+
+        {
+            get => _PresetTime;
+            set
+            {
+                _PresetTime = value;
+                OnPropertyChanged("PresetTime");
+            }
+        }
+
+        private string _CustomX;
+        public string CustomX
+
+        {
+            get => _CustomX;
+            set
+            {
+                _CustomX = value;
+                OnPropertyChanged("CustomX");
+            }
+        }
+
+        public bool ValidateValue()
+        {
+            int Dummy = 0;
+
+            if (int.TryParse(PresetSample, out Dummy))
+                if (Dummy < 0 && Dummy > Constants.MaxPlotBuffLength)
+                    return false;
+
+            if (int.TryParse(PresetTime, out Dummy))
+                if (Dummy < 0 && Dummy > Constants.MeasureTimeLimit)
+                    return false;
+
+            if (int.TryParse(CustomX, out Dummy))
+                if (Dummy < 0 && Dummy > Constants.CustomXaxisLength)
+                    return false;
+
+            return true;
+        }
+
+        public ModelPlot(string _PresetSample = "100", string _PresetTime = "10", string _CustomX = " 100")
+        {
+            PresetSample = _PresetSample;
+            PresetTime = _PresetTime;
+            CustomX = _CustomX;
+        }
     }
 
     class BelowStatusModel : ModelBase

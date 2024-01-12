@@ -83,6 +83,8 @@
                         Value="Center" />
                 <Setter Property="TextAlignment"
                         Value="Right" />
+                <Setter Property="MaterialDesign:ValidationAssist.Suppress"
+                        Value="True" />
                 <Setter Property="MaterialDesign:TextFieldAssist.HasClearButton"
                         Value="True" />
                 <Setter Property="MaterialDesign:HintAssist.FloatingScale"
