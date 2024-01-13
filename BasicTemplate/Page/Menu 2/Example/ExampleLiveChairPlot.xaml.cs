@@ -2,29 +2,10 @@
 using BasicTemplate.Control;
 using ScottPlot;
 using ScottPlot.Plottable;
-using ScottPlot.SnapLogic;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
-using System.Management;
-using System.Reflection;
-using System.Reflection.Metadata;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Media.Media3D;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Windows.Threading;
 
 namespace BasicTemplate.Example
 {
@@ -47,8 +28,10 @@ namespace BasicTemplate.Example
         public WpfPlot PlotBase { get; set; }
         public bool bIsCustomXEnable { get; set; }
 
+        private Crosshair Chair;
         private SignalPlot Sigplot;
         private BackgroundWorker bWorker;
+        private ModelConstChart3 Const;
         private double[] PlotDataBuffer;
 
         private vmTextboxWithClearBtn _TextPresetSample;
@@ -84,6 +67,18 @@ namespace BasicTemplate.Example
             }
         }
 
+        private vmDataTipInfo _DataTip;
+        public vmDataTipInfo DataTip
+        {
+            get => _DataTip;
+            set
+            {
+                _DataTip = value;
+                OnPropertyChanged("DataTip");
+            }
+        }
+
+
         private bool _bTrigger;
         public bool bTrigger
         {
@@ -117,7 +112,6 @@ namespace BasicTemplate.Example
                             bTrigger = true;
                             PlotBase.Refresh();
 
-                            // create a timer to update the GUI
                             bWorker.RunWorkerAsync();
                         }
                         else
@@ -128,6 +122,58 @@ namespace BasicTemplate.Example
             }
         }
 
+        private ICommand _CustomXCmd;
+        public ICommand CustomXCmd
+        {
+            get
+            {
+                if (_CustomXCmd == null)
+                    _CustomXCmd = new BaseCommand(p =>
+                    {
+                        if (!bIsCustomXEnable)
+                        {
+                            PlotBase.Plot.SetAxisLimitsY(0, 10);
+                            PlotBase.Plot.SetAxisLimitsX(0, (int)Const.MaxPlotBuffLength);
+                        }
+                    });
+                return _CustomXCmd;
+            }
+        }
+
+        private ICommand _DataTipActionCmd;
+        public ICommand DataTipActionCmd
+        {
+            get
+            {
+                if (_DataTipActionCmd == null)
+                    _DataTipActionCmd = new BaseCommand(p =>
+                    {
+                        string Instruction = (string)p;
+
+                        if (!DataTip.bIsDataTipShown)
+                        {
+                            Chair.IsVisible = true;
+                            DataTip.VisibleToggler(true);
+                        }
+
+                        if (p == null)
+                        {
+                            (double mouseCoordX, double mouseCoordY) = PlotBase.GetMouseCoordinates();
+                            double xyRatio = PlotBase.Plot.XAxis.Dims.PxPerUnit / PlotBase.Plot.YAxis.Dims.PxPerUnit;
+
+                            (double Px, double Py, int PIdx)
+                            = Sigplot.GetPointNearestX(mouseCoordX);
+
+                            Chair.X = PIdx;
+                            Chair.Y = PlotDataBuffer[PIdx];
+                            DataTip.Xvalue = PIdx.ToString();
+                            DataTip.Yvalue = PlotDataBuffer[PIdx].ToString();
+                        }
+
+                    });
+                return _DataTipActionCmd;
+            }
+        }
 
         private void RunLivePlot(object? sender, DoWorkEventArgs e)
         {
@@ -145,23 +191,21 @@ namespace BasicTemplate.Example
 
                 Stack.AddRange(Ran.RandomSample(SampleValue));
 
-                if (Stack.Count > Constants.MaxPlotBuffLength)
+                if (Stack.Count > Const.MaxPlotBuffLength)
                 {
-                    Stack.RemoveRange(0, (Stack.Count() - (int)Constants.MaxPlotBuffLength));
-                    Array.Copy(Stack.ToArray(), PlotDataBuffer, (int)Constants.MaxPlotBuffLength);
+                    Stack.RemoveRange(0, Stack.Count() - (int)Const.MaxPlotBuffLength);
+                    Array.Copy(Stack.ToArray(), PlotDataBuffer, (int)Const.MaxPlotBuffLength);
                 }
                 else
                     Array.Copy(Stack.ToArray(), PlotDataBuffer, Stack.Count());
 
                 Sigplot.MaxRenderIndex = Stack.Count() - 1;
 
-                if (!bIsCustomXEnable)
-                    PlotBase.Plot.AxisAuto();
-                else
+                if (bIsCustomXEnable)
                 {
                     PlotBase.Plot.AxisAutoY();
                     PlotBase.Plot.SetAxisLimitsX(
-                        Math.Max(0, Sigplot.MaxRenderIndex - double.Parse(TextCustomX.Text)), 
+                        Math.Max(0, Sigplot.MaxRenderIndex - double.Parse(TextCustomX.Text)),
                         Math.Max(1, Sigplot.MaxRenderIndex));
                 }
 
@@ -176,45 +220,65 @@ namespace BasicTemplate.Example
             int Dummy = 0;
 
             if (int.TryParse(TextPresetSample.Text, out Dummy))
-                if (Dummy < 0 && Dummy > Constants.MaxPlotBuffLength)
+                if (Dummy < 0 && Dummy > Const.MaxPlotBuffLength)
                     return false;
 
             if (int.TryParse(TextPresetTime.Text, out Dummy))
-                if (Dummy < 0 && Dummy > Constants.MeasureTimeLimit)
+                if (Dummy < 0 && Dummy > Const.MeasureTimeLimit)
                     return false;
 
             if (int.TryParse(TextCustomX.Text, out Dummy))
-                if (Dummy < 0 && Dummy > Constants.CustomXaxisLength)
+                if (Dummy < 0 && Dummy > Const.CustomXaxisLength)
                     return false;
 
             return true;
         }
 
+        private void ClearDataTip(object? sender, EventArgs e)
+        {
+            DataTip.VisibleToggler(false);
+            Chair.IsVisible = false;
+
+            if(!bTrigger)
+                PlotBase.Refresh();
+        }
+
 
         public vmExampleLiveChairPlot()
         {
+
+            // Load Const
+            Const = new ModelConstChart3();
+
             // Create plot
             PlotBase = new WpfPlot();
-            PlotBase.Configuration.LockHorizontalAxis = true;
-            PlotBase.Configuration.LockVerticalAxis = true;
+            PlotBase.Configuration.DoubleClickBenchmark = false;
+            PlotBase.Plot.SetAxisLimitsX(0, (int)Const.MaxPlotBuffLength);
+            PlotBase.Plot.SetAxisLimitsY(0, 10);
 
             // InitializePlot
-            PlotDataBuffer = new double[(int)Constants.MaxPlotBuffLength];
+            PlotDataBuffer = new double[(int)Const.MaxPlotBuffLength];
             Sigplot = PlotBase.Plot.AddSignal(PlotDataBuffer);
             Sigplot.MaxRenderIndex = 0;
+            Sigplot.MinRenderIndex = 0;
+            Chair = PlotBase.Plot.AddCrosshair(0, 0);
+            Chair.IsVisible = false;
             PlotBase.Refresh();
 
             // Create Controls
+            DataTip = new vmDataTipInfo();
+            DataTip.ClearDataTipEvt += ClearDataTip;
+
             TextPresetSample = new vmTextboxWithClearBtn(
-                _MaxLimit: Constants.MaxPlotBuffLength.ToString(),
+                _MaxLimit: Const.MaxPlotBuffLength.ToString(),
                 _MinLimit: "1",
                 _Txt: "100");
             TextPresetTime = new vmTextboxWithClearBtn(
-                _MaxLimit: Constants.MeasureTimeLimit.ToString(),
+                _MaxLimit: Const.MeasureTimeLimit.ToString(),
                 _MinLimit: "1",
                 _Txt: "10");
             TextCustomX = new vmTextboxWithClearBtn(
-                _MaxLimit: Constants.CustomXaxisLength.ToString(),
+                _MaxLimit: Const.CustomXaxisLength.ToString(),
                 _MinLimit: "1",
                 _Txt: "100");
 
@@ -222,6 +286,7 @@ namespace BasicTemplate.Example
             bWorker = new BackgroundWorker();
             bWorker.DoWork += RunLivePlot;
         }
+
 
     }
 

@@ -13,7 +13,6 @@ namespace BasicTemplate.Base
 {
     class Helper
     {
-
         public static EventHandler EvtBelowStatus;
 
         public static void UpdateBelowStatus(bool? _BelowCircle = null, string? _BelowText = null, int? _Belowbar = null)
@@ -98,10 +97,5 @@ namespace BasicTemplate.Base
         }
     }
 
-    static class Constants
-    {
-        public const double  MaxPlotBuffLength = 100000;
-        public const double MeasureTimeLimit = 60;
-        public const double CustomXaxisLength = 10000;
-    }
+
 }

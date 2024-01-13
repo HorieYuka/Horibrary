@@ -32,7 +32,22 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="0">
-                    <ContentControl Content="{Binding PlotBase}" />
+                    <ContentControl Content="{Binding PlotBase}">
+                        <ContentControl.InputBindings>
+                            <KeyBinding Key="Left"
+                                        Command="{Binding DataTipCmd}"
+                                        CommandParameter="-1" />
+                            <KeyBinding Key="Right"
+                                        Command="{Binding DataTipCmd}"
+                                        CommandParameter="+1" />
+                            <MouseBinding Gesture="LeftDoubleClick"
+                                          Command="{Binding DataTipActionCmd}" />
+                        </ContentControl.InputBindings>
+                    </ContentControl>
+                    <ContentControl Margin="40"
+                                    VerticalAlignment="Top"
+                                    HorizontalAlignment="Right"
+                                    Content="{Binding DataTip}" />
                     <Button VerticalAlignment="Bottom"
                             HorizontalAlignment="Right"
                             Margin="0,0,55,60"
@@ -83,7 +98,8 @@
                     <StackPanel Margin="5">
                         <Grid>
                             <CheckBox x:Name="Ck_Xaxis"
-                                      IsChecked="{Binding bIsCustomXEnable}">
+                                      IsChecked="{Binding bIsCustomXEnable}"
+                                      Command="{Binding CustomXCmd}">
                                 <TextBlock FontSize="14"
                                            FontWeight="Bold"
                                            Text="X축 표현 갯수 설정" />
@@ -124,7 +140,7 @@
                                        FontSize="14"
                                        FontWeight="Bold"
                                        Text="샘플링 갯수" />
-                            
+
                             <ContentControl  HorizontalAlignment="Right"
                                              Content="{Binding TextPresetSample}" />
                         </Grid>
@@ -144,7 +160,7 @@
                                        FontSize="14"
                                        FontWeight="Bold"
                                        Text="측정 시간 (분)" />
-                            
+
                             <ContentControl  HorizontalAlignment="Right"
                                              Content="{Binding TextPresetTime}" />
                         </Grid>
@@ -159,7 +175,6 @@
                     </StackPanel>
                 </StackPanel>
             </Grid>
-
         </Grid>
     </GroupBox>
 </UserControl>

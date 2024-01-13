@@ -57,4 +57,24 @@ namespace BasicTemplate.Base
             }
         }
     }
+
+    class ModelConstChart1
+    {
+        public readonly double MaxPlotBuffLength = 100000;
+        public readonly double MeasureTimeLimit = 60;
+        public readonly double CustomXaxisLength = 10000;
+    }
+    class ModelConstChart2
+    {
+        public readonly double MaxPlotBuffLength = 100000;
+        public readonly double MeasureTimeLimit = 60;
+        public readonly double CustomXaxisLength = 10000;
+
+    }
+    class ModelConstChart3
+    {
+        public readonly double MaxPlotBuffLength = 100000;
+        public readonly double MeasureTimeLimit = 60;
+        public readonly double CustomXaxisLength = 10000;
+    }
 }

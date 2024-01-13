@@ -21,6 +21,7 @@
             <SolidColorBrush x:Key="SecondaryCustomColor"
                              Color="#007dab" />
 
+            <!--Pages-->
             <DataTemplate DataType="{x:Type Page:vmPageCommon}">
                 <Page:PageCommon />
             </DataTemplate>
@@ -32,7 +33,7 @@
                 <Control:SlotExample />
             </DataTemplate>
 
-
+            <!--Examples-->
             <DataTemplate DataType="{x:Type Example:vmExampleBasicPlot}">
                 <Example:ExampleBasicPlot />
             </DataTemplate>
@@ -43,11 +44,16 @@
                 <Example:ExampleLiveChairPlot />
             </DataTemplate>
 
-
+            <!--Controls-->
             <DataTemplate DataType="{x:Type Control:vmTextboxWithClearBtn}">
                 <Control:TextboxWithClearBtn />
             </DataTemplate>
+            <DataTemplate DataType="{x:Type Control:vmDataTipInfo}">
+                <Control:DataTipInfo />
+            </DataTemplate>
 
+            
+            <!--Styles-->
             <!-- Low opacity FAB -->
             <Style x:Key="LoFAB" TargetType="{x:Type Button}"
                        BasedOn="{StaticResource MaterialDesignFloatingActionButton}">

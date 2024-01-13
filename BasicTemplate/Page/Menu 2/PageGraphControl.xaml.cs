@@ -42,6 +42,18 @@ namespace BasicTemplate.Page
 
         public List<IExample> ExampleList { get; set; }
 
+
+        private short _CurrentTabIdx;
+        public short CurrentTabIdx
+        {
+            get => _CurrentTabIdx;
+            set
+            {
+                _CurrentTabIdx = value;
+                OnPropertyChanged("CurrentTabIdx");
+            }
+        }
+
         internal vmPageGraphControl()
         {
             // Create examples
@@ -53,8 +65,8 @@ namespace BasicTemplate.Page
                 new vmExampleLiveChairPlot(),
             ];
 
-
         }
-
+        public void RetrieveState()
+        { }
     }
 }
