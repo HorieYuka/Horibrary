@@ -83,27 +83,14 @@
                     <StackPanel Margin="5">
                         <Grid>
                             <CheckBox x:Name="Ck_Xaxis"
-                                      IsChecked="{Binding Model.bIsCustomXEnable}">
+                                      IsChecked="{Binding bIsCustomXEnable}">
                                 <TextBlock FontSize="14"
                                            FontWeight="Bold"
                                            Text="X축 표현 갯수 설정" />
                             </CheckBox>
-
-                            <TextBox HorizontalAlignment="Right"
-                                     Padding="10"
-                                     Margin="5,0"
-                                     Width="100"
-                                     Background="White"
+                            <ContentControl  HorizontalAlignment="Right"
                                      IsEnabled="{Binding IsChecked, ElementName=Ck_Xaxis}"
-                                     Style="{StaticResource IntonlyTextbox}"
-                                     Text="{Binding Value, ElementName=S_Xaxis, UpdateSourceTrigger=LostFocus}">
-                                <Interact:Interaction.Triggers>
-                                    <Interact:EventTrigger EventName="LostFocus">
-                                        <Interact:InvokeCommandAction Command="{Binding CheckValueCmd}"
-                                                                      CommandParameter="{Binding }"/>
-                                    </Interact:EventTrigger>
-                                </Interact:Interaction.Triggers>
-                            </TextBox>
+                                     Content="{Binding TextCustomX}" />
                         </Grid>
                         <Separator Margin="0,5" />
                         <Slider x:Name="S_Xaxis"
@@ -113,7 +100,7 @@
                                 IsEnabled="{Binding IsChecked, ElementName=Ck_Xaxis}"
                                 Minimum="1"
                                 Maximum="{x:Static Base:Constants.CustomXaxisLength}"
-                                Value="{Binding Model.CustomX}" />
+                                Value="{Binding TextCustomX.Text}" />
                     </StackPanel>
                 </StackPanel>
             </Grid>
@@ -137,13 +124,9 @@
                                        FontSize="14"
                                        FontWeight="Bold"
                                        Text="샘플링 갯수" />
-                            <TextBox HorizontalAlignment="Right"
-                                     Padding="10"
-                                     Margin="5,0"
-                                     Width="100"
-                                     Background="White"
-                                     Style="{StaticResource IntonlyTextbox}"
-                                     Text="{Binding Value, ElementName=S_PresetSample, UpdateSourceTrigger=LostFocus}" />
+                            
+                            <ContentControl  HorizontalAlignment="Right"
+                                             Content="{Binding TextPresetSample}" />
                         </Grid>
                         <Separator Margin="0,5" />
                         <Slider x:Name="S_PresetSample"
@@ -152,7 +135,7 @@
                                 TickFrequency="1"
                                 Minimum="1"
                                 Maximum="{x:Static Base:Constants.MaxPlotBuffLength}"
-                                Value="{Binding Model.PresetSample}" />
+                                Value="{Binding TextPresetSample.Text}" />
                     </StackPanel>
                     <StackPanel Margin="5">
                         <Grid>
@@ -161,13 +144,9 @@
                                        FontSize="14"
                                        FontWeight="Bold"
                                        Text="측정 시간 (분)" />
-                            <TextBox HorizontalAlignment="Right"
-                                     Padding="10"
-                                     Margin="5,0"
-                                     Width="100"
-                                     Background="White"
-                                     Style="{StaticResource IntonlyTextbox}"
-                                     Text="{Binding Value, ElementName=S_PresetTime, UpdateSourceTrigger=LostFocus}" />
+                            
+                            <ContentControl  HorizontalAlignment="Right"
+                                             Content="{Binding TextPresetTime}" />
                         </Grid>
                         <Separator Margin="0,5" />
                         <Slider x:Name="S_PresetTime"
@@ -176,7 +155,7 @@
                                 TickFrequency="1"
                                 Minimum="1"
                                 Maximum="{x:Static Base:Constants.MeasureTimeLimit}"
-                                Value="{Binding Model.PresetTime}" />
+                                Value="{Binding TextPresetTime.Text}" />
                     </StackPanel>
                 </StackPanel>
             </Grid>

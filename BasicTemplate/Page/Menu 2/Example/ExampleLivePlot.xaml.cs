@@ -38,7 +38,6 @@ namespace BasicTemplate.Example
         public short ExampleNum => 1;
 
         public WpfPlot PlotBase { get; set; }
-        public ModelPlot Model { get; set; }
 
         private SignalPlot Sigplot;
 

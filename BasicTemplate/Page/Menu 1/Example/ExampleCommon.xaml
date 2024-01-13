@@ -8,179 +8,38 @@
              mc:Ignorable="d"
              d:DesignHeight="450"
              d:DesignWidth="800">
-    <GroupBox MaterialDesign:ColorZoneAssist.Mode="SecondaryMid">
-        <GroupBox.Header>
-            <Grid>
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Foreground="White"
-                               Text="{Binding ExampleName}" />
-                </StackPanel>
-            </Grid>
-        </GroupBox.Header>
-        <StackPanel Orientation="Horizontal">
-            <Border Width="70"
-                    Height="70"
-                    Margin="2.5"
-                    BorderBrush="Black"
-                    BorderThickness="1"
-                    CornerRadius="5">
-                <Grid>
-                    <RadioButton VerticalAlignment="Top"
-                                 HorizontalAlignment="Left" />
-                    <MaterialDesign:PackIcon Width="60"
-                                             Height="60"
-                                             VerticalAlignment="Bottom"
-                                             HorizontalAlignment="Right"
-                                             Kind="CircleOutline" />
-                </Grid>
-            </Border>
-            <Border Width="70"
-                    Height="70"
-                    Margin="2.5"
-                    BorderBrush="Black"
-                    BorderThickness="1"
-                    CornerRadius="5">
-                <Grid>
-                    <RadioButton VerticalAlignment="Top"
-                                 HorizontalAlignment="Left" />
-                    <MaterialDesign:PackIcon Width="60"
-                                             Height="60"
-                                             VerticalAlignment="Bottom"
-                                             HorizontalAlignment="Right"
-                                             Kind="CircleSlice1" />
-                </Grid>
-            </Border>
-            <Border Width="70"
-                    Height="70"
-                    Margin="2.5"
-                    BorderBrush="Black"
-                    BorderThickness="1"
-                    CornerRadius="5">
-                <Grid>
-                    <RadioButton VerticalAlignment="Top"
-                                 HorizontalAlignment="Left" />
-                    <MaterialDesign:PackIcon Width="60"
-                                             Height="60"
-                                             VerticalAlignment="Bottom"
-                                             HorizontalAlignment="Right"
-                                             Kind="CircleSlice2" />
-                </Grid>
-            </Border>
-            <Border Width="70"
-                    Height="70"
-                    Margin="2.5"
-                    BorderBrush="Black"
-                    BorderThickness="1"
-                    CornerRadius="5">
-                <Grid>
-                    <RadioButton VerticalAlignment="Top"
-                                 HorizontalAlignment="Left" />
-                    <MaterialDesign:PackIcon Width="60"
-                                             Height="60"
-                                             VerticalAlignment="Bottom"
-                                             HorizontalAlignment="Right"
-                                             Kind="CircleSlice3" />
-                </Grid>
-            </Border>
-            <Border Width="70"
-                    Height="70"
-                    Margin="2.5"
-                    BorderBrush="Black"
-                    BorderThickness="1"
-                    CornerRadius="5">
-                <Grid>
-                    <RadioButton VerticalAlignment="Top"
-                                 HorizontalAlignment="Left" />
-                    <MaterialDesign:PackIcon Width="60"
-                                             Height="60"
-                                             VerticalAlignment="Bottom"
-                                             HorizontalAlignment="Right"
-                                             Kind="CircleSlice4" />
-                </Grid>
-            </Border>
-            <Border Width="70"
-                    Height="70"
-                    Margin="2.5"
-                    BorderBrush="Black"
-                    BorderThickness="1"
-                    CornerRadius="5">
-                <Grid>
-                    <RadioButton VerticalAlignment="Top"
-                                 HorizontalAlignment="Left" />
-                    <MaterialDesign:PackIcon Width="60"
-                                             Height="60"
-                                             VerticalAlignment="Bottom"
-                                             HorizontalAlignment="Right"
-                                             Kind="CircleSlice5" />
-                </Grid>
-            </Border>
-            <Border Width="70"
-                    Height="70"
-                    Margin="2.5"
-                    BorderBrush="Black"
-                    BorderThickness="1"
-                    CornerRadius="5">
-                <Grid>
-                    <RadioButton VerticalAlignment="Top"
-                                 HorizontalAlignment="Left" />
-                    <MaterialDesign:PackIcon Width="60"
-                                             Height="60"
-                                             VerticalAlignment="Bottom"
-                                             HorizontalAlignment="Right"
-                                             Kind="CircleSlice6" />
-                </Grid>
-            </Border>
-            <Border Width="70"
-                    Height="70"
-                    Margin="2.5"
-                    BorderBrush="Black"
-                    BorderThickness="1"
-                    CornerRadius="5">
-                <Grid>
-                    <RadioButton VerticalAlignment="Top"
-                                 HorizontalAlignment="Left" />
-                    <MaterialDesign:PackIcon Width="60"
-                                             Height="60"
-                                             VerticalAlignment="Bottom"
-                                             HorizontalAlignment="Right"
-                                             Kind="CircleSlice7" />
-                </Grid>
-            </Border>
+    
+    <Border Width="70"
+            Height="70"
+            Margin="2.5"
+            BorderBrush="Black"
+            BorderThickness="1"
+            CornerRadius="5">
+        <Grid>
+            <RadioButton x:Name="Rbtn" VerticalAlignment="Top"
+                         HorizontalAlignment="Left" />
+            <MaterialDesign:PackIcon Width="60"
+                                     Height="60"
+                                     VerticalAlignment="Bottom"
+                                     HorizontalAlignment="Right"
+                                     Kind="CircleOutline" />
+        </Grid>
+        <Border.Style>
+            <Style TargetType="{x:Type Border}">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding IsChecked,ElementName=Rbtn}"
+                                 Value="true">
+                        <Setter Property="Background"
+                                Value="LightGreen" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding IsChecked,ElementName=Rbtn}"
+                                 Value="false">
+                        <Setter Property="Background"
+                                Value="Transparent" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </Border.Style>
+    </Border>
 
-            <StackPanel.Style>
-                <Style TargetType="{x:Type RadioButton}">
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding bTrigger}"
-                                     Value="true">
-                            <Setter Property="Background"
-                                    Value="Crimson" />
-                            <Setter Property="ContentTemplate">
-                                <Setter.Value>
-                                    <DataTemplate>
-                                        <MaterialDesign:PackIcon Kind="Stop"
-                                                                 Width="35"
-                                                                 Height="35" />
-                                    </DataTemplate>
-                                </Setter.Value>
-                            </Setter>
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding bTrigger}"
-                                     Value="false">
-                            <Setter Property="Background"
-                                    Value="{StaticResource PrimaryCustomColor}" />
-                            <Setter Property="ContentTemplate">
-                                <Setter.Value>
-                                    <DataTemplate>
-                                        <MaterialDesign:PackIcon Kind="Play"
-                                                                 Width="35"
-                                                                 Height="35" />
-                                    </DataTemplate>
-                                </Setter.Value>
-                            </Setter>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </Grid.Style>
-        </StackPanel>
-    </GroupBox>
 </UserControl>

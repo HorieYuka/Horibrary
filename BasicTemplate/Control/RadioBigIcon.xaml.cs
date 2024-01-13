@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BasicTemplate.Base;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,5 +25,23 @@ namespace BasicTemplate.Control
         {
             InitializeComponent();
         }
+    }
+
+    class vmRadioBigIcon : ObservableObject
+    {
+        private bool _bIsChekced;
+        public bool bIsChekced
+
+        {
+            get => _bIsChekced;
+            set
+            {
+                _bIsChekced = value;
+                OnPropertyChanged("bIsChekced");
+            }
+        }
+
+        public vmRadioBigIcon(bool _bIsChecked = false)
+            => bIsChekced = _bIsChecked;
     }
 }

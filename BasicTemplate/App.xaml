@@ -43,6 +43,11 @@
                 <Example:ExampleLiveChairPlot />
             </DataTemplate>
 
+
+            <DataTemplate DataType="{x:Type Control:vmTextboxWithClearBtn}">
+                <Control:TextboxWithClearBtn />
+            </DataTemplate>
+
             <!-- Low opacity FAB -->
             <Style x:Key="LoFAB" TargetType="{x:Type Button}"
                        BasedOn="{StaticResource MaterialDesignFloatingActionButton}">
@@ -84,8 +89,6 @@
                 <Setter Property="TextAlignment"
                         Value="Right" />
                 <Setter Property="MaterialDesign:ValidationAssist.Suppress"
-                        Value="True" />
-                <Setter Property="MaterialDesign:TextFieldAssist.HasClearButton"
                         Value="True" />
                 <Setter Property="MaterialDesign:HintAssist.FloatingScale"
                         Value="1.1" />

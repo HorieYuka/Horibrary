@@ -1,6 +1,8 @@
 ﻿using BasicTemplate.Base;
+using BasicTemplate.Control;
 using ScottPlot;
 using ScottPlot.Plottable;
+using ScottPlot.SnapLogic;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -19,6 +21,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Media.Media3D;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
@@ -41,12 +44,45 @@ namespace BasicTemplate.Example
         public string ExampleName => "실시간 그래프, 크로스 헤어 생성하기";
         public short ExampleNum => 2;
 
-        public ModelPlot Model { get; set; }
         public WpfPlot PlotBase { get; set; }
+        public bool bIsCustomXEnable { get; set; }
 
         private SignalPlot Sigplot;
         private BackgroundWorker bWorker;
         private double[] PlotDataBuffer;
+
+        private vmTextboxWithClearBtn _TextPresetSample;
+        public vmTextboxWithClearBtn TextPresetSample
+        {
+            get => _TextPresetSample;
+            set
+            {
+                _TextPresetSample = value;
+                OnPropertyChanged("TextPresetSample");
+            }
+        }
+
+        private vmTextboxWithClearBtn _TextPresetTime;
+        public vmTextboxWithClearBtn TextPresetTime
+        {
+            get => _TextPresetTime;
+            set
+            {
+                _TextPresetTime = value;
+                OnPropertyChanged("TextPresetTime");
+            }
+        }
+
+        private vmTextboxWithClearBtn _TextCustomX;
+        public vmTextboxWithClearBtn TextCustomX
+        {
+            get => _TextCustomX;
+            set
+            {
+                _TextCustomX = value;
+                OnPropertyChanged("TextCustomX");
+            }
+        }
 
         private bool _bTrigger;
         public bool bTrigger
@@ -72,7 +108,7 @@ namespace BasicTemplate.Example
                         if (bTrigger == false)
                         {
                             // Check values
-                            if (!Model.ValidateValue())
+                            if (!ValidateValue())
                             {
                                 Helper.UpdateBelowStatus(null, "입력값에 오류가 있습니다.", null);
                                 return;
@@ -100,8 +136,8 @@ namespace BasicTemplate.Example
             Stopwatch Sw = new Stopwatch();
             RandomDataGenerator Ran = new RandomDataGenerator();
 
-            int SampleValue = int.Parse(Model.PresetSample);
-            int TimeValue = int.Parse(Model.PresetTime);
+            int SampleValue = int.Parse(TextPresetSample.Text);
+            int TimeValue = int.Parse(TextPresetTime.Text);
 
             Sw.Start();
             while (bTrigger && Sw.Elapsed.TotalMinutes < TimeValue)
@@ -119,12 +155,14 @@ namespace BasicTemplate.Example
 
                 Sigplot.MaxRenderIndex = Stack.Count() - 1;
 
-                if(!Model.bIsCustomXEnable)
+                if (!bIsCustomXEnable)
                     PlotBase.Plot.AxisAuto();
                 else
                 {
                     PlotBase.Plot.AxisAutoY();
-                    PlotBase.Plot.SetAxisLimitsX(Math.Max(0, Sigplot.MaxRenderIndex - double.Parse(Model.CustomX)), Math.Max(1, Sigplot.MaxRenderIndex));
+                    PlotBase.Plot.SetAxisLimitsX(
+                        Math.Max(0, Sigplot.MaxRenderIndex - double.Parse(TextCustomX.Text)), 
+                        Math.Max(1, Sigplot.MaxRenderIndex));
                 }
 
                 UiInvoke(delegate { PlotBase.Refresh(); });
@@ -133,20 +171,52 @@ namespace BasicTemplate.Example
 
         }
 
+        public bool ValidateValue()
+        {
+            int Dummy = 0;
+
+            if (int.TryParse(TextPresetSample.Text, out Dummy))
+                if (Dummy < 0 && Dummy > Constants.MaxPlotBuffLength)
+                    return false;
+
+            if (int.TryParse(TextPresetTime.Text, out Dummy))
+                if (Dummy < 0 && Dummy > Constants.MeasureTimeLimit)
+                    return false;
+
+            if (int.TryParse(TextCustomX.Text, out Dummy))
+                if (Dummy < 0 && Dummy > Constants.CustomXaxisLength)
+                    return false;
+
+            return true;
+        }
+
 
         public vmExampleLiveChairPlot()
         {
             // Create plot
             PlotBase = new WpfPlot();
+            PlotBase.Configuration.LockHorizontalAxis = true;
+            PlotBase.Configuration.LockVerticalAxis = true;
 
             // InitializePlot
-            PlotDataBuffer = new double[ (int) Constants.MaxPlotBuffLength];
+            PlotDataBuffer = new double[(int)Constants.MaxPlotBuffLength];
             Sigplot = PlotBase.Plot.AddSignal(PlotDataBuffer);
             Sigplot.MaxRenderIndex = 0;
             PlotBase.Refresh();
 
-            // Set default value
-            Model = new ModelPlot();
+            // Create Controls
+            TextPresetSample = new vmTextboxWithClearBtn(
+                _MaxLimit: Constants.MaxPlotBuffLength.ToString(),
+                _MinLimit: "1",
+                _Txt: "100");
+            TextPresetTime = new vmTextboxWithClearBtn(
+                _MaxLimit: Constants.MeasureTimeLimit.ToString(),
+                _MinLimit: "1",
+                _Txt: "10");
+            TextCustomX = new vmTextboxWithClearBtn(
+                _MaxLimit: Constants.CustomXaxisLength.ToString(),
+                _MinLimit: "1",
+                _Txt: "100");
 
             // Set Background thread
             bWorker = new BackgroundWorker();
