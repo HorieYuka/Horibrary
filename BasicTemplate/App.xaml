@@ -21,6 +21,7 @@
             <SolidColorBrush x:Key="SecondaryCustomColor"
                              Color="#007dab" />
 
+            <!--Pages-->
             <DataTemplate DataType="{x:Type Page:vmPageCommon}">
                 <Page:PageCommon />
             </DataTemplate>
@@ -28,11 +29,11 @@
                 <Page:PageGraphControl />
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type Control:vmExampleSlot}">
-                <Control:ExampleSlot />
+            <DataTemplate DataType="{x:Type Control:vmSlotExample}">
+                <Control:SlotExample />
             </DataTemplate>
 
-
+            <!--Examples-->
             <DataTemplate DataType="{x:Type Example:vmExampleBasicPlot}">
                 <Example:ExampleBasicPlot />
             </DataTemplate>
@@ -43,6 +44,16 @@
                 <Example:ExampleLiveChairPlot />
             </DataTemplate>
 
+            <!--Controls-->
+            <DataTemplate DataType="{x:Type Control:vmTextboxWithClearBtn}">
+                <Control:TextboxWithClearBtn />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type Control:vmDataTipInfo}">
+                <Control:DataTipInfo />
+            </DataTemplate>
+
+            
+            <!--Styles-->
             <!-- Low opacity FAB -->
             <Style x:Key="LoFAB" TargetType="{x:Type Button}"
                        BasedOn="{StaticResource MaterialDesignFloatingActionButton}">
@@ -60,18 +71,35 @@
                 </Style.Triggers>
             </Style>
 
+            <!-- Check selection validation -->
+            <Style x:Key="SelectValidCombo"
+                   TargetType="{x:Type ComboBox}"
+                   BasedOn="{StaticResource MaterialDesignOutlinedComboBox}">
+                <Style.Triggers>
+                    <Trigger Property="SelectedItem"
+                             Value="{x:Null}">
+                        <Setter Property="Foreground"
+                                Value="Crimson" />
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
             <!-- Integer-only textbox-->
             <Style x:Key="IntonlyTextbox"
                    TargetType="{x:Type TextBox}"
                    BasedOn="{StaticResource MaterialDesignOutlinedTextBox}">
                 <EventSetter Event="PreviewTextInput"
                              Handler="PreviewTextInput" />
+                <Setter Property="VerticalContentAlignment"
+                        Value="Center" />
                 <Setter Property="TextAlignment"
                         Value="Right" />
-                <Setter Property="MaterialDesign:TextFieldAssist.HasClearButton"
+                <Setter Property="MaterialDesign:ValidationAssist.Suppress"
                         Value="True" />
                 <Setter Property="MaterialDesign:HintAssist.FloatingScale"
                         Value="1.1" />
+                <Setter Property="MaterialDesign:ValidationAssist.Suppress"
+                        Value="True" />
             </Style>
 
         </ResourceDictionary>

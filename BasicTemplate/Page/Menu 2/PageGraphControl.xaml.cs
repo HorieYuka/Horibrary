@@ -4,7 +4,9 @@ using BasicTemplate.Example;
 using MaterialDesignThemes.Wpf;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -16,6 +18,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace BasicTemplate.Page
 {
@@ -36,34 +39,25 @@ namespace BasicTemplate.Page
         public string PageName => "그래프";
         public short PageNum => 3;
 
-        public List<ISlot> SlotList { get; set; }
+
         public List<IExample> ExampleList { get; set; }
 
-        private IExample _CurrentExample;
-        public IExample CurrentExample
-        {
-            get => _CurrentExample;
-            set
-            {
-                _CurrentExample = value;
-                OnPropertyChanged("CurrentExample");
-            }
-        }
 
-        private int _ExampleIdx;
-        public int ExampleIdx
+        private short _CurrentTabIdx;
+        public short CurrentTabIdx
         {
-            get => _ExampleIdx;
+            get => _CurrentTabIdx;
             set
             {
-                _ExampleIdx = value;
-                if(_ExampleIdx >= 0) CurrentExample = ExampleList[_ExampleIdx];
+                _CurrentTabIdx = value;
+                OnPropertyChanged("CurrentTabIdx");
             }
         }
 
         internal vmPageGraphControl()
         {
             // Create examples
+            ExampleList = new List<IExample>();
             ExampleList =
             [
                 new vmExampleBasicPlot(),
@@ -71,13 +65,8 @@ namespace BasicTemplate.Page
                 new vmExampleLiveChairPlot(),
             ];
 
-            // Create example slots;
-            ExampleIdx = -1;
-            SlotList = new List<ISlot>();
-            for (int i = 0; i < ExampleList.Count; i++)
-                SlotList.Add(new vmExampleSlot(ExampleList[i]));
-
         }
-
+        public void RetrieveState()
+        { }
     }
 }

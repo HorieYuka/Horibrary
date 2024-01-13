@@ -1,6 +1,7 @@
 ﻿using BasicTemplate.Base;
 using System;
 using System.Collections.Generic;
+using System.IO.Ports;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,11 +30,43 @@ namespace BasicTemplate.Control
 
     class vmSlotCom : ObservableObject
     {
+        public EventHandler ConnectEvt;
+        public EventHandler DisconnectEvt;
+
+        public ModelCOM Model;
+        private SerialPort Serial;
+
+        public vmSlotCom(ModelCOM _Model)
+            => Model = _Model;
+
+        private ICommand _ConDeviceCmd;
+        public ICommand CreatePlotCmd
+        {
+            get
+            {
+                if (_ConDeviceCmd == null)
+                    _ConDeviceCmd = new BaseCommand(p =>
+                    {
+                        Serial = new SerialPort(Model.Port, Model.Baudrate);
+                    });
+                return _ConDeviceCmd;
+            }
+        }
+
+        private ICommand _DisConDeviceCmd;
+        public ICommand DisConDeviceCmd
+        {
+            get
+            {
+                if (_DisConDeviceCmd == null)
+                    _DisConDeviceCmd = new BaseCommand(p =>
+                    {
 
 
-        public vmSlotCom() 
-        { 
-        
+
+                    });
+                return _DisConDeviceCmd;
+            }
         }
     }
 }

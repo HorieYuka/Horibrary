@@ -3,31 +3,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace BasicTemplate.Base
 {
-    class ModelSlotBase : ObservableObject
+    class ModelBase : ObservableObject
     {
-        // Insert common slot properties here.
-
-        public string SlotText { get; set; }
-
+        // Insert common  properties here.
     }
 
-    class ModelSlotCOM : ModelSlotBase
+    class ModelCOM : ModelBase
     {
-        public EventHandler ConnectEvt;
-        public EventHandler DisconnectEvt;
-
         public bool IsConnected { get; set; }
 
-        public string PortNum { get; set; }
-        public string PortName { get; set; }
-        public int Boadrate { get; set; }
-
+        public string Port { get; set; }
+        public string Name { get; set; }
+        public int Baudrate { get; set; }
     }
 
-    class BelowStatusModel : ObservableObject
+    class BelowStatusModel : ModelBase
     {
         private int? _BelowBar;
         public int? BelowBar
@@ -62,5 +56,25 @@ namespace BasicTemplate.Base
                 OnPropertyChanged("BelowCircle");
             }
         }
+    }
+
+    class ModelConstChart1
+    {
+        public readonly double MaxPlotBuffLength = 100000;
+        public readonly double MeasureTimeLimit = 60;
+        public readonly double CustomXaxisLength = 10000;
+    }
+    class ModelConstChart2
+    {
+        public readonly double MaxPlotBuffLength = 100000;
+        public readonly double MeasureTimeLimit = 60;
+        public readonly double CustomXaxisLength = 10000;
+
+    }
+    class ModelConstChart3
+    {
+        public readonly double MaxPlotBuffLength = 100000;
+        public readonly double MeasureTimeLimit = 60;
+        public readonly double CustomXaxisLength = 10000;
     }
 }

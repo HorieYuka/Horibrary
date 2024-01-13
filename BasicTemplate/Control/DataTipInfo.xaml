@@ -1,0 +1,66 @@
+﻿<UserControl x:Class="BasicTemplate.Control.DataTipInfo"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BasicTemplate.Control"
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    
+    <MaterialDesign:Card Width="200"
+                         Height="Auto"
+                         Visibility="{Binding VisibleTip}">
+        <StackPanel Margin="10">
+            <Grid Margin="5,0">
+                <TextBlock  FontSize="16"
+                            FontWeight="Bold"
+                            VerticalAlignment="Center"
+                            Text="Tip Information" />
+                <Button HorizontalAlignment="Right"
+                        Width="25"
+                        Height="25"
+                        Style="{StaticResource MaterialDesignIconButton}"
+                        Command="{Binding ClearDataTipCmd}">
+                    <MaterialDesign:PackIcon Kind="CrosshairsOff"
+                                             Width="20"
+                                             Height="20" />
+                </Button>
+            </Grid>
+            <Separator Grid.Row="1"
+                       Margin="5,10" />
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Row="0"
+                           Grid.Column="0"
+                           Text="X Value : " />
+                <TextBlock Grid.Row="1"
+                           Grid.Column="0"
+                           Text="Y Value : " />
+                <TextBlock Grid.Row="0"
+                           Grid.Column="1"
+                           Text="{Binding Xvalue}" />
+                <TextBlock Grid.Row="1"
+                           Grid.Column="1"
+                           Text="{Binding Yvalue}" />
+                <Grid.Resources>
+                    <Style TargetType="{x:Type TextBlock}">
+                        <Setter Property="Margin"
+                                Value="5" />
+                        <Setter Property="TextAlignment"
+                                Value="Right" />
+                        <Setter Property="FontSize"
+                                Value="13" />
+                    </Style>
+                </Grid.Resources>
+            </Grid>
+        </StackPanel>
+    </MaterialDesign:Card>
+</UserControl>

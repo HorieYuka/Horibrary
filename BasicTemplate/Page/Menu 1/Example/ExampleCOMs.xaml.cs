@@ -1,4 +1,5 @@
 ﻿using BasicTemplate.Base;
+using BasicTemplate.Control;
 using System;
 using System.Collections.Generic;
 using System.IO.Ports;
@@ -31,9 +32,7 @@ namespace BasicTemplate.Page.Menu_1.Example
 
     class vmExampleCOMs : ObservableObject
     {
-        List
-
-
+        List<vmSlotCom> ListCom { get; set; }
 
         private ICommand _FindCOMs;
         public ICommand FindCOMs
@@ -42,22 +41,22 @@ namespace BasicTemplate.Page.Menu_1.Example
             {
                 if (_FindCOMs == null)
                     _FindCOMs = new BaseCommand(p => {
-
-                        string ComName = "USB Serial Port";
-
-                        using (var searcher = new ManagementObjectSearcher("SELECT * FROM Win32_PnPEntity WHERE Caption like '%(COM%'"))
+                        using (var searcher = new ManagementObjectSearcher("SELECT * FROM Win32_PnPEntity WHERE Caption like 'COM%'"))
                         {
-                            var ComNames = SerialPort.GetPortNames();
+                            var Portnames = SerialPort.GetPortNames();
                             var Searcher = searcher.Get().Cast<ManagementBaseObject>().ToList().Select(p => p["Caption"].ToString());
-                            var ComList = ComNames.Select(n => Searcher.FirstOrDefault(s => s.Contains(n))).ToList();
+                            var COMs = Portnames.Select(n => Searcher.FirstOrDefault(s => s.Contains(n))).ToList();
 
-                            for (int i = 0; i < ComList.Count(); i++)
+                            for (int i = 0; i < COMs.Count(); i++)
                             {
-                                if (ComList[i] == null) continue;
-                                else if (ComList[i].Contains(ComName))
+                                if (COMs[i] == null) continue;
+                                else
                                 {
-                                    RlyBd = new SerialPort(COMS[i], 115200);
-                                    // Should add some lines that it is genuine.
+                                    ListCom.Add(new vmSlotCom( 
+                                        new ModelCOM() { 
+                                        Name = Portnames[i], 
+                                        Port = COMs[i] 
+                                        }));
                                 }
 
                             }
@@ -65,6 +64,11 @@ namespace BasicTemplate.Page.Menu_1.Example
                     });
                 return _FindCOMs;
             }
+        }
+
+        public vmExampleCOMs()
+        {
+            ListCom = new List<vmSlotCom>();
         }
     }
 

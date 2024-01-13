@@ -52,6 +52,7 @@ namespace BasicTemplate
                     _ChangePageCmd = new BaseCommand(p => {
                         int Idx = int.Parse((string)p);
                         CurrentPage = PageList[Idx];
+                        CurrentPage.RetrieveState();
                     });
                 return _ChangePageCmd;
             }
@@ -65,9 +66,7 @@ namespace BasicTemplate
             Helper.EvtBelowStatus += UpdateBelowStatus;
 
             // Define pages
-            PageList = new List<IPage>();
-            PageList.Add(new vmPageCommon());
-            PageList.Add(new vmPageGraphControl());
+            PageList = [new vmPageCommon(), new vmPageGraphControl()];
         }
 
         private void UpdateBelowStatus(object sender, EventArgs e)
