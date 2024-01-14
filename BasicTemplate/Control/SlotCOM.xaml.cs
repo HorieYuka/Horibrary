@@ -28,7 +28,7 @@ namespace BasicTemplate.Control
         }
     }
 
-    class vmSlotCom : ObservableObject
+    class vmSlotCOM : ObservableObject
     {
         public EventHandler ConnectEvt;
         public EventHandler DisconnectEvt;
@@ -36,7 +36,7 @@ namespace BasicTemplate.Control
         public ModelCOM Model;
         private SerialPort Serial;
 
-        public vmSlotCom(ModelCOM _Model)
+        public vmSlotCOM(ModelCOM _Model)
             => Model = _Model;
 
         private ICommand _ConDeviceCmd;

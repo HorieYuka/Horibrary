@@ -7,7 +7,8 @@
              xmlns:Base="clr-namespace:BasicTemplate.Base"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    
+
+
     <GroupBox MaterialDesign:ColorZoneAssist.Mode="SecondaryMid">
         <GroupBox.Header>
             <Grid>
@@ -18,11 +19,6 @@
             </Grid>
         </GroupBox.Header>
         <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition />
@@ -81,7 +77,8 @@
                     <StackPanel Margin="5">
                         <Grid>
                             <CheckBox x:Name="Ck_Xaxis"
-                                      IsChecked="{Binding bIsCustomXEnable}">
+                                      IsChecked="{Binding bIsCustomXEnable}"
+                                      Command="{Binding CustomXCmd}">
                                 <TextBlock FontSize="14"
                                            FontWeight="Bold"
                                            Text="X축 표현 갯수 설정" />
@@ -97,25 +94,11 @@
                                 TickFrequency="1"
                                 IsEnabled="{Binding IsChecked, ElementName=Ck_Xaxis}"
                                 Minimum="1"
-                                Maximum="{x:Static Base:Constants.CustomXaxisLength}"
+                                Maximum="{x:Static Base:ModelConstChart2.MaxPlotBuffLength}"
                                 Value="{Binding TextCustomX.Text}" />
                     </StackPanel>
-                </StackPanel>
-            </Grid>
-
-            <Border Grid.Column="1"
-                    Margin="10,5"
-                    BorderBrush="Gray"
-                    BorderThickness="1" />
-            <Grid Grid.Column="2"
-                  IsEnabled="{Binding bTrigger,Converter={StaticResource InvertBooleanConverter}}">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <StackPanel Width="400">
-                    <StackPanel Margin="5">
+                    <StackPanel Margin="5"
+                                IsEnabled="{Binding bTrigger,Converter={StaticResource InvertBooleanConverter}}">
                         <Grid>
                             <TextBlock VerticalAlignment="Center"
                                        Margin="5,0"
@@ -132,10 +115,11 @@
                                 IsSnapToTickEnabled="True"
                                 TickFrequency="1"
                                 Minimum="1"
-                                Maximum="{x:Static Base:Constants.MaxPlotBuffLength}"
+                                Maximum="{x:Static Base:ModelConstChart2.MaxPlotBuffLength}"
                                 Value="{Binding TextPresetSample.Text}" />
                     </StackPanel>
-                    <StackPanel Margin="5">
+                    <StackPanel Margin="5"
+                                IsEnabled="{Binding bTrigger,Converter={StaticResource InvertBooleanConverter}}">
                         <Grid>
                             <TextBlock VerticalAlignment="Center"
                                        Margin="5,0"
@@ -152,7 +136,7 @@
                                 IsSnapToTickEnabled="True"
                                 TickFrequency="1"
                                 Minimum="1"
-                                Maximum="{x:Static Base:Constants.MeasureTimeLimit}"
+                                Maximum="{x:Static Base:ModelConstChart2.MeasureTimeLimit}"
                                 Value="{Binding TextPresetTime.Text}" />
                     </StackPanel>
                 </StackPanel>

@@ -81,19 +81,6 @@
                                        Text="{Binding PageList[1].PageName}" />
                         </StackPanel>
                     </Button>
-                </StackPanel>
-                <StackPanel>
-                    <!-- Menu 3-->
-                    <TextBlock Foreground="White"
-                               FontSize="15"
-                               FontWeight="Bold"
-                               VerticalAlignment="Center"
-                               Margin="5"
-                               Text="Menu 3" />
-                    <Separator Grid.Row="1"
-                               Margin="0,5"
-                               Foreground="White" />
-
                     <Button Width="Auto"
                             Height="60"
                             Style="{StaticResource MaterialDesignFlatLightButton}"
@@ -113,9 +100,10 @@
                         </StackPanel>
                     </Button>
                 </StackPanel>
+
             </StackPanel>
 
-            <!--Buttom Menu-->
+            <!--Exit-->
             <StackPanel VerticalAlignment="Bottom">
                 <Button Width="Auto"
                         Height="60"

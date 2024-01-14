@@ -2,6 +2,7 @@
 using BasicTemplate.Control;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO.Ports;
 using System.Linq;
 using System.Management;
@@ -17,22 +18,26 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace BasicTemplate.Page.Menu_1.Example
+namespace BasicTemplate.Example
 {
     /// <summary>
     /// ExampleCOMs.xaml에 대한 상호 작용 논리
     /// </summary>
-    public partial class ExampleCOMs : UserControl
+    public partial class ExampleCOM : UserControl
     {
-        public ExampleCOMs()
+        public ExampleCOM()
         {
             InitializeComponent();
         }
     }
 
-    class vmExampleCOMs : ObservableObject
+    class vmExampleCOM : ObservableObject, IExample
     {
-        List<vmSlotCom> ListCom { get; set; }
+        public string ExampleName => "COM 장비";
+        public short ExampleNum => 0;
+
+
+        public ObservableCollection<vmSlotCOM> ListCOM { get; set; }
 
         private ICommand _FindCOMs;
         public ICommand FindCOMs
@@ -41,7 +46,10 @@ namespace BasicTemplate.Page.Menu_1.Example
             {
                 if (_FindCOMs == null)
                     _FindCOMs = new BaseCommand(p => {
-                        using (var searcher = new ManagementObjectSearcher("SELECT * FROM Win32_PnPEntity WHERE Caption like 'COM%'"))
+
+                        ListCOM.Clear();
+
+                        using (var searcher = new ManagementObjectSearcher("SELECT * FROM Win32_PnPEntity WHERE Caption like '%(COM%'"))
                         {
                             var Portnames = SerialPort.GetPortNames();
                             var Searcher = searcher.Get().Cast<ManagementBaseObject>().ToList().Select(p => p["Caption"].ToString());
@@ -52,7 +60,7 @@ namespace BasicTemplate.Page.Menu_1.Example
                                 if (COMs[i] == null) continue;
                                 else
                                 {
-                                    ListCom.Add(new vmSlotCom( 
+                                    ListCOM.Add(new vmSlotCOM( 
                                         new ModelCOM() { 
                                         Name = Portnames[i], 
                                         Port = COMs[i] 
@@ -61,14 +69,43 @@ namespace BasicTemplate.Page.Menu_1.Example
 
                             }
                         }
+
                     });
                 return _FindCOMs;
             }
         }
 
-        public vmExampleCOMs()
+        private ICommand _ReadCOM;
+        public ICommand ReadCOM
         {
-            ListCom = new List<vmSlotCom>();
+            get
+            {
+                if (_ReadCOM == null)
+                    _ReadCOM = new BaseCommand(p => {
+
+                    });
+                return _ReadCOM;
+            }
+        }
+
+        private ICommand _WriteCOM;
+        public ICommand WriteCOM
+        {
+            get
+            {
+                if (_WriteCOM == null)
+                    _WriteCOM = new BaseCommand(p => {
+                       
+                    });
+                return _WriteCOM;
+            }
+        }
+
+
+
+        public vmExampleCOM()
+        {
+            ListCOM = new ObservableCollection<vmSlotCOM>();
         }
     }
 

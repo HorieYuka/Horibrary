@@ -1,4 +1,7 @@
-﻿using System;
+﻿using BasicTemplate.Base;
+using BasicTemplate.Example;
+using MaterialDesignThemes.Wpf;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,7 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace BasicTemplate.Page.Menu_2
+namespace BasicTemplate.Page
 {
     /// <summary>
     /// PageDeviceControl.xaml에 대한 상호 작용 논리
@@ -24,5 +27,40 @@ namespace BasicTemplate.Page.Menu_2
         {
             InitializeComponent();
         }
+    }
+
+    class vmPageDeviceControl : ObservableObject, IPage
+    {
+        public PackIconKind PageIcon => PackIconKind.DeveloperBoard;
+        public string PageName => "장치";
+        public short PageNum => 4;
+
+        public List<IExample> ExampleList { get; set; }
+
+        private short _CurrentTabIdx;
+        public short CurrentTabIdx
+        {
+            get => _CurrentTabIdx;
+            set
+            {
+                _CurrentTabIdx = value;
+                OnPropertyChanged("CurrentTabIdx");
+            }
+        }
+
+        internal vmPageDeviceControl()
+        {
+            // Create examples
+            ExampleList =
+            [
+                new vmExampleCOM(),
+                new vmExampleGPIB()
+            ];
+            
+
+        }
+
+        public void RetrieveState()
+        { }
     }
 }

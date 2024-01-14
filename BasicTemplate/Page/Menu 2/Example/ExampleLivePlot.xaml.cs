@@ -5,6 +5,7 @@ using ScottPlot.Plottable;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -41,9 +42,9 @@ namespace BasicTemplate.Example
         public WpfPlot PlotBase { get; set; }
         public bool bIsCustomXEnable { get; set; }
 
+        private Crosshair Chair;
         private SignalPlot Sigplot;
         private BackgroundWorker bWorker;
-        private ModelConstChart2 Const;
         private double[] PlotDataBuffer;
 
         private vmTextboxWithClearBtn _TextPresetSample;
@@ -78,6 +79,7 @@ namespace BasicTemplate.Example
                 OnPropertyChanged("TextCustomX");
             }
         }
+
 
         private bool _bTrigger;
         public bool bTrigger
@@ -122,6 +124,32 @@ namespace BasicTemplate.Example
             }
         }
 
+        private ICommand _CustomXCmd;
+        public ICommand CustomXCmd
+        {
+            get
+            {
+                if (_CustomXCmd == null)
+                    _CustomXCmd = new BaseCommand(p =>
+                    {
+                        if (!bIsCustomXEnable)
+                        {
+                            PlotBase.Plot.SetAxisLimitsY(0, 10);
+                            PlotBase.Plot.SetAxisLimitsX(0, (int)ModelConstChart2.MaxPlotBuffLength);
+                        }
+                        else
+                        {
+                            PlotBase.Plot.AxisAutoY();
+                            PlotBase.Plot.SetAxisLimitsX(
+                                Math.Max(0, Sigplot.MaxRenderIndex - double.Parse(TextCustomX.Text)),
+                                Math.Max(1, Sigplot.MaxRenderIndex));
+                        }
+                        if (!bTrigger)
+                            PlotBase.Render();
+                    });
+                return _CustomXCmd;
+            }
+        }
 
         private void RunLivePlot(object? sender, DoWorkEventArgs e)
         {
@@ -139,19 +167,17 @@ namespace BasicTemplate.Example
 
                 Stack.AddRange(Ran.RandomSample(SampleValue));
 
-                if (Stack.Count > Const.MaxPlotBuffLength)
+                if (Stack.Count > ModelConstChart2.MaxPlotBuffLength)
                 {
-                    Stack.RemoveRange(0, (Stack.Count() - (int)Const.MaxPlotBuffLength));
-                    Array.Copy(Stack.ToArray(), PlotDataBuffer, (int)Const.MaxPlotBuffLength);
+                    Stack.RemoveRange(0, Stack.Count() - (int)ModelConstChart2.MaxPlotBuffLength);
+                    Array.Copy(Stack.ToArray(), PlotDataBuffer, (int)ModelConstChart2.MaxPlotBuffLength);
                 }
                 else
                     Array.Copy(Stack.ToArray(), PlotDataBuffer, Stack.Count());
 
                 Sigplot.MaxRenderIndex = Stack.Count() - 1;
 
-                if (!bIsCustomXEnable)
-                    PlotBase.Plot.AxisAuto();
-                else
+                if (bIsCustomXEnable)
                 {
                     PlotBase.Plot.AxisAutoY();
                     PlotBase.Plot.SetAxisLimitsX(
@@ -170,48 +196,50 @@ namespace BasicTemplate.Example
             int Dummy = 0;
 
             if (int.TryParse(TextPresetSample.Text, out Dummy))
-                if (Dummy < 0 && Dummy > Const.MaxPlotBuffLength)
+                if (Dummy < 0 && Dummy > ModelConstChart2.MaxPlotBuffLength)
                     return false;
 
             if (int.TryParse(TextPresetTime.Text, out Dummy))
-                if (Dummy < 0 && Dummy > Const.MeasureTimeLimit)
+                if (Dummy < 0 && Dummy > ModelConstChart2.MeasureTimeLimit)
                     return false;
 
             if (int.TryParse(TextCustomX.Text, out Dummy))
-                if (Dummy < 0 && Dummy > Const.CustomXaxisLength)
+                if (Dummy < 0 && Dummy > ModelConstChart2.CustomXaxisLength)
                     return false;
 
             return true;
         }
 
-
+  
         public vmExampleLivePlot()
         {
-            // Load Const
-            Const = new ModelConstChart2();
-
             // Create plot
             PlotBase = new WpfPlot();
-            PlotBase.Configuration.LockHorizontalAxis = true;
-            PlotBase.Configuration.LockVerticalAxis = true;
+            PlotBase.Configuration.DoubleClickBenchmark = false;
+            PlotBase.Plot.SetAxisLimitsX(0, (int)ModelConstChart2.MaxPlotBuffLength);
+            PlotBase.Plot.SetAxisLimitsY(0, 10);
 
             // InitializePlot
-            PlotDataBuffer = new double[(int)Const.MaxPlotBuffLength];
+            PlotDataBuffer = new double[(int)ModelConstChart2.MaxPlotBuffLength];
             Sigplot = PlotBase.Plot.AddSignal(PlotDataBuffer);
             Sigplot.MaxRenderIndex = 0;
+            Sigplot.MinRenderIndex = 0;
+            Chair = PlotBase.Plot.AddCrosshair(0, 0);
+            Chair.IsVisible = false;
             PlotBase.Refresh();
 
             // Create Controls
+
             TextPresetSample = new vmTextboxWithClearBtn(
-                _MaxLimit: Const.MaxPlotBuffLength.ToString(),
+                _MaxLimit: ModelConstChart2.MaxPlotBuffLength.ToString(),
                 _MinLimit: "1",
                 _Txt: "100");
             TextPresetTime = new vmTextboxWithClearBtn(
-                _MaxLimit: Const.MeasureTimeLimit.ToString(),
+                _MaxLimit: ModelConstChart2.MeasureTimeLimit.ToString(),
                 _MinLimit: "1",
                 _Txt: "10");
             TextCustomX = new vmTextboxWithClearBtn(
-                _MaxLimit: Const.CustomXaxisLength.ToString(),
+                _MaxLimit: ModelConstChart2.CustomXaxisLength.ToString(),
                 _MinLimit: "1",
                 _Txt: "100");
 

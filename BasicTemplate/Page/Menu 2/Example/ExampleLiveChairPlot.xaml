@@ -20,161 +20,92 @@
             </Grid>
         </GroupBox.Header>
         <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
             <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <Grid Grid.Row="0">
-                    <ContentControl Content="{Binding PlotBase}">
-                        <ContentControl.InputBindings>
-                            <KeyBinding Key="Left"
-                                        Command="{Binding DataTipCmd}"
-                                        CommandParameter="-1" />
-                            <KeyBinding Key="Right"
-                                        Command="{Binding DataTipCmd}"
-                                        CommandParameter="+1" />
-                            <MouseBinding Gesture="LeftDoubleClick"
-                                          Command="{Binding DataTipActionCmd}" />
-                        </ContentControl.InputBindings>
-                    </ContentControl>
-                    <ContentControl Margin="40"
-                                    VerticalAlignment="Top"
-                                    HorizontalAlignment="Right"
-                                    Content="{Binding DataTip}" />
-                    <Button VerticalAlignment="Bottom"
-                            HorizontalAlignment="Right"
-                            Margin="0,0,55,60"
-                            Command="{Binding CreatePlotCmd}">
-                        <Button.Style>
-                            <Style TargetType="{x:Type Button}"
-                                   BasedOn="{StaticResource LoFAB}">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding bTrigger}"
-                                                 Value="true">
-                                        <Setter Property="Background"
-                                                Value="Crimson" />
-                                        <Setter Property="ContentTemplate">
-                                            <Setter.Value>
-                                                <DataTemplate>
-                                                    <MaterialDesign:PackIcon Kind="Stop"
-                                                                             Width="35"
-                                                                             Height="35" />
-                                                </DataTemplate>
-                                            </Setter.Value>
-                                        </Setter>
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding bTrigger}"
-                                                 Value="false">
-                                        <Setter Property="Background"
-                                                Value="{StaticResource PrimaryCustomColor}" />
-                                        <Setter Property="ContentTemplate">
-                                            <Setter.Value>
-                                                <DataTemplate>
-                                                    <MaterialDesign:PackIcon Kind="Play"
-                                                                             Width="35"
-                                                                             Height="35" />
-                                                </DataTemplate>
-                                            </Setter.Value>
-                                        </Setter>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Button.Style>
-                    </Button>
-                </Grid>
-                <Border Grid.Row="1"
-                        Margin="5"
-                        BorderBrush="Gray"
-                        BorderThickness="1" />
 
-                <StackPanel Grid.Row="2">
-                    <StackPanel Margin="5">
-                        <Grid>
-                            <CheckBox x:Name="Ck_Xaxis"
-                                      IsChecked="{Binding bIsCustomXEnable}"
-                                      Command="{Binding CustomXCmd}">
-                                <TextBlock FontSize="14"
-                                           FontWeight="Bold"
-                                           Text="X축 표현 갯수 설정" />
-                            </CheckBox>
-                            <ContentControl  HorizontalAlignment="Right"
-                                     IsEnabled="{Binding IsChecked, ElementName=Ck_Xaxis}"
-                                     Content="{Binding TextCustomX}" />
-                        </Grid>
-                        <Separator Margin="0,5" />
-                        <Slider x:Name="S_Xaxis"
-                                VerticalAlignment="Center"
-                                IsSnapToTickEnabled="True"
-                                TickFrequency="1"
-                                IsEnabled="{Binding IsChecked, ElementName=Ck_Xaxis}"
-                                Minimum="1"
-                                Maximum="{x:Static Base:Constants.CustomXaxisLength}"
-                                Value="{Binding TextCustomX.Text}" />
-                    </StackPanel>
-                </StackPanel>
+                <ContentControl Content="{Binding PlotBase}">
+                    <ContentControl.InputBindings>
+                        <MouseBinding Gesture="LeftDoubleClick"
+                                      Command="{Binding DataTipActionCmd}" />
+                    </ContentControl.InputBindings>
+                </ContentControl>
+                <ContentControl Margin="40"
+                                VerticalAlignment="Top"
+                                HorizontalAlignment="Right"
+                                Content="{Binding DataTip}" />
+                <Button VerticalAlignment="Bottom"
+                        HorizontalAlignment="Right"
+                        Margin="0,0,55,60"
+                        Command="{Binding CreatePlotCmd}">
+                    <Button.Style>
+                        <Style TargetType="{x:Type Button}"
+                               BasedOn="{StaticResource LoFAB}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding bTrigger}"
+                                             Value="true">
+                                    <Setter Property="Background"
+                                            Value="Crimson" />
+                                    <Setter Property="ContentTemplate">
+                                        <Setter.Value>
+                                            <DataTemplate>
+                                                <MaterialDesign:PackIcon Kind="Stop"
+                                                                         Width="35"
+                                                                         Height="35" />
+                                            </DataTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding bTrigger}"
+                                             Value="false">
+                                    <Setter Property="Background"
+                                            Value="{StaticResource PrimaryCustomColor}" />
+                                    <Setter Property="ContentTemplate">
+                                        <Setter.Value>
+                                            <DataTemplate>
+                                                <MaterialDesign:PackIcon Kind="Play"
+                                                                         Width="35"
+                                                                         Height="35" />
+                                            </DataTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
             </Grid>
-
-            <Border Grid.Column="1"
-                    Margin="10,5"
+            <Border Grid.Row="1"
+                    Margin="5"
                     BorderBrush="Gray"
                     BorderThickness="1" />
-            <Grid Grid.Column="2"
-                  IsEnabled="{Binding bTrigger,Converter={StaticResource InvertBooleanConverter}}">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <StackPanel Width="400">
-                    <StackPanel Margin="5">
-                        <Grid>
-                            <TextBlock VerticalAlignment="Center"
-                                       Margin="5,0"
-                                       FontSize="14"
-                                       FontWeight="Bold"
-                                       Text="샘플링 갯수" />
 
-                            <ContentControl  HorizontalAlignment="Right"
-                                             Content="{Binding TextPresetSample}" />
-                        </Grid>
-                        <Separator Margin="0,5" />
-                        <Slider x:Name="S_PresetSample"
-                                VerticalAlignment="Center"
-                                IsSnapToTickEnabled="True"
-                                TickFrequency="1"
-                                Minimum="1"
-                                Maximum="{x:Static Base:Constants.MaxPlotBuffLength}"
-                                Value="{Binding TextPresetSample.Text}" />
-                    </StackPanel>
-                    <StackPanel Margin="5">
-                        <Grid>
-                            <TextBlock VerticalAlignment="Center"
-                                       Margin="5,0"
-                                       FontSize="14"
-                                       FontWeight="Bold"
-                                       Text="측정 시간 (분)" />
+            <StackPanel Grid.Row="2">
+                <StackPanel Margin="5"
+                            IsEnabled="{Binding bTrigger,Converter={StaticResource InvertBooleanConverter}}">
+                    <Grid>
+                        <TextBlock VerticalAlignment="Center"
+                                   Margin="5,0"
+                                   FontSize="14"
+                                   FontWeight="Bold"
+                                   Text="측정 시간 (분)" />
 
-                            <ContentControl  HorizontalAlignment="Right"
-                                             Content="{Binding TextPresetTime}" />
-                        </Grid>
-                        <Separator Margin="0,5" />
-                        <Slider x:Name="S_PresetTime"
-                                VerticalAlignment="Center"
-                                IsSnapToTickEnabled="True"
-                                TickFrequency="1"
-                                Minimum="1"
-                                Maximum="{x:Static Base:Constants.MeasureTimeLimit}"
-                                Value="{Binding TextPresetTime.Text}" />
-                    </StackPanel>
+                        <ContentControl  HorizontalAlignment="Right"
+                                         Content="{Binding TextPresetTime}" />
+                    </Grid>
+                    <Separator Margin="0,5" />
+                    <Slider x:Name="S_PresetTime"
+                            VerticalAlignment="Center"
+                            IsSnapToTickEnabled="True"
+                            TickFrequency="1"
+                            Minimum="1"
+                            Maximum="{x:Static Base:ModelConstChart3.MeasureTimeLimit}"
+                            Value="{Binding TextPresetTime.Text}" />
                 </StackPanel>
-            </Grid>
+            </StackPanel>
         </Grid>
     </GroupBox>
 </UserControl>

@@ -58,23 +58,27 @@ namespace BasicTemplate.Base
         }
     }
 
-    class ModelConstChart1
+
+    #region Constant for Examples
+
+    static class ModelConstChart1
     {
-        public readonly double MaxPlotBuffLength = 100000;
-        public readonly double MeasureTimeLimit = 60;
-        public readonly double CustomXaxisLength = 10000;
+        public static readonly double MaxPlotBuffLength = 100000;
+        public static readonly double MeasureTimeLimit = 60;
+        public static readonly double CustomXaxisLength = 10000;
     }
-    class ModelConstChart2
+    static class ModelConstChart2
     {
-        public readonly double MaxPlotBuffLength = 100000;
-        public readonly double MeasureTimeLimit = 60;
-        public readonly double CustomXaxisLength = 10000;
+        public static readonly double MaxPlotBuffLength = 100000;
+        public static readonly double MeasureTimeLimit = 60;
+        public static readonly double CustomXaxisLength = 100000;
 
     }
-    class ModelConstChart3
+    static class ModelConstChart3
     {
-        public readonly double MaxPlotBuffLength = 100000;
-        public readonly double MeasureTimeLimit = 60;
-        public readonly double CustomXaxisLength = 10000;
+        public static readonly double MaxPlotBuffLength = 1000;
+        public static readonly double MeasureTimeLimit = 60;
     }
+
+    #endregion
 }
