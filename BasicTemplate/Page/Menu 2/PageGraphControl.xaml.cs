@@ -42,7 +42,6 @@ namespace BasicTemplate.Page
 
         public List<IExample> ExampleList { get; set; }
 
-
         private short _CurrentTabIdx;
         public short CurrentTabIdx
         {

@@ -28,10 +28,12 @@
             <DataTemplate DataType="{x:Type Page:vmPageGraphControl}">
                 <Page:PageGraphControl />
             </DataTemplate>
-
-            <DataTemplate DataType="{x:Type Control:vmSlotExample}">
-                <Control:SlotExample />
+            <DataTemplate DataType="{x:Type Page:vmPageDeviceControl}">
+                <Page:PageDeviceControl />
             </DataTemplate>
+
+
+
 
             <!--Examples-->
             <DataTemplate DataType="{x:Type Example:vmExampleBasicPlot}">
@@ -43,6 +45,13 @@
             <DataTemplate DataType="{x:Type Example:vmExampleLiveChairPlot}">
                 <Example:ExampleLiveChairPlot />
             </DataTemplate>
+            <DataTemplate DataType="{x:Type Example:vmExampleCOM}">
+                <Example:ExampleCOM />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type Example:vmExampleGPIB}">
+                <Example:ExampleGPIB />
+            </DataTemplate>
+
 
             <!--Controls-->
             <DataTemplate DataType="{x:Type Control:vmTextboxWithClearBtn}">
@@ -51,8 +60,13 @@
             <DataTemplate DataType="{x:Type Control:vmDataTipInfo}">
                 <Control:DataTipInfo />
             </DataTemplate>
+            <DataTemplate DataType="{x:Type Control:vmSlotExample}">
+                <Control:SlotExample />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type Control:vmSlotCOM}">
+                <Control:SlotCOM />
+            </DataTemplate>
 
-            
             <!--Styles-->
             <!-- Low opacity FAB -->
             <Style x:Key="LoFAB" TargetType="{x:Type Button}"

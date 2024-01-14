@@ -66,7 +66,11 @@ namespace BasicTemplate
             Helper.EvtBelowStatus += UpdateBelowStatus;
 
             // Define pages
-            PageList = [new vmPageCommon(), new vmPageGraphControl()];
+            PageList = [
+                new vmPageCommon(), 
+                new vmPageGraphControl(),
+                new vmPageDeviceControl(),
+                ];
         }
 
         private void UpdateBelowStatus(object sender, EventArgs e)
