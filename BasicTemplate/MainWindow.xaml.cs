@@ -52,7 +52,6 @@ namespace BasicTemplate
                     _ChangePageCmd = new BaseCommand(p => {
                         int Idx = int.Parse((string)p);
                         CurrentPage = PageList[Idx];
-                        CurrentPage.RetrieveState();
                     });
                 return _ChangePageCmd;
             }

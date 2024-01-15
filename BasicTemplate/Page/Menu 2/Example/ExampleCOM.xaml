@@ -29,8 +29,7 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition />
                 </Grid.RowDefinitions>
-                <StackPanel Grid.Row="0"
-                            Margin="5">
+                <StackPanel Grid.Row="0">
                     <Grid>
                         <TextBlock VerticalAlignment="Center"
                                    Margin="5,0"
@@ -44,28 +43,54 @@
                                 HorizontalAlignment="Right"
                                 Style="{StaticResource MaterialDesignIconButton}"
                                 Command="{Binding FindCOMs}">
-                            <MaterialDesign:PackIcon Kind="Close"
-                                                     Width="25"
-                                                     Height="25" />
+                            <MaterialDesign:PackIcon Kind="Refresh"
+                                                     Width="30"
+                                                     Height="30" />
                         </Button>
                     </Grid>
                 </StackPanel>
-                <Separator Grid.Row="1" Margin="0,5" />
+                <Separator Grid.Row="1"
+                           Margin="0,5" />
                 <ScrollViewer Grid.Row="2">
-                    <ListView 
-                        ItemsSource="{Binding ListCOM}" />
+                    <ListView HorizontalContentAlignment="Stretch"
+                              SelectedItem="{Binding CurrentSess}"
+                              ItemsSource="{Binding ListCOM}" />
                 </ScrollViewer>
             </Grid>
             <Border Grid.Column="1"
                     BorderBrush="LightGray"
                     BorderThickness="1" />
+            
             <Grid Grid.Column="2">
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
                     <RowDefinition />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <TextBlock Grid.Row="0" />
-                <Border Grid.Row="1"
+                <StackPanel Grid.Row="0">
+                    <Grid>
+                        <TextBlock VerticalAlignment="Center"
+                                   Margin="10,0"
+                                   FontSize="14"
+                                   FontWeight="Bold"
+                                   Text="{Binding CurrentSess.Name}" />
+                        <Button Margin="5,0"
+                                Width="40"
+                                Height="40"
+                                HorizontalAlignment="Right"
+                                Style="{StaticResource MaterialDesignIconButton}"
+                                Command="{Binding v}">
+                            <MaterialDesign:PackIcon Kind="TrashCan"
+                                                     Width="30"
+                                                     Height="30" />
+                        </Button>
+                    </Grid>
+                    <Separator Margin="0,5" />
+                </StackPanel>
+
+
+
+                <Border Grid.Row="2"
                         BorderBrush="LightGray"
                         BorderThickness="1"
                         Background="FloralWhite">

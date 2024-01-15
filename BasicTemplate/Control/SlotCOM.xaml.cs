@@ -30,43 +30,88 @@ namespace BasicTemplate.Control
 
     class vmSlotCOM : ObservableObject
     {
-        public EventHandler ConnectEvt;
-        public EventHandler DisconnectEvt;
 
-        public ModelCOM Model;
+        public int Idx { get; set; }
+        public string Port { get; set; }
+        public string Name { get; set; }
+
+
         private SerialPort Serial;
 
-        public vmSlotCOM(ModelCOM _Model)
-            => Model = _Model;
-
-        private ICommand _ConDeviceCmd;
-        public ICommand CreatePlotCmd
+        private bool _IsConnected;
+        public bool IsConnected
         {
-            get
+            get => _IsConnected;
+            set
             {
-                if (_ConDeviceCmd == null)
-                    _ConDeviceCmd = new BaseCommand(p =>
-                    {
-                        Serial = new SerialPort(Model.Port, Model.Baudrate);
-                    });
-                return _ConDeviceCmd;
+                _IsConnected = value;
+                OnPropertyChanged("IsConnected");
             }
         }
 
-        private ICommand _DisConDeviceCmd;
-        public ICommand DisConDeviceCmd
+        private int _BaudrateIdx;
+        public int BaudrateIdx
         {
-            get
+            get => _BaudrateIdx;
+            set
             {
-                if (_DisConDeviceCmd == null)
-                    _DisConDeviceCmd = new BaseCommand(p =>
-                    {
-
-
-
-                    });
-                return _DisConDeviceCmd;
+                _BaudrateIdx = value;
+                OnPropertyChanged("BaudrateIdx");
             }
         }
+
+        private string _Log;
+        public string Log
+        {
+            get => _Log;
+            set
+            {
+                _Log = value;
+                OnPropertyChanged("Log");
+            }
+        }
+
+        public vmSlotCOM(int _Idx, string _Name, string _Port)
+        {
+            Idx = _Idx;
+            Name = _Name;
+            Port = _Port;
+        }
+
+        public void ConnectDevice()
+        {
+            string Baudrate = ModelConstDevice1.BaudrateList[BaudrateIdx];
+
+            if (!string.IsNullOrEmpty(Baudrate) && !Baudrate.Equals("Auto"))
+                Serial = new SerialPort(Port, int.Parse(Baudrate));
+            else
+            {
+                Serial = new SerialPort(Port);
+                Serial.BaudRate
+                    ModelConstDevice1.BaudrateList.
+                BaudrateIdx.find
+
+            }
+            IsConnected = true;
+
+        }
+
+        public string ReadDevice()
+        {
+            string Out = "";
+
+            if (Serial != null)
+                Out = Serial.ReadLine();
+
+            return Out;
+        }
+
+
+        public void WriteDevice(string str)
+        { if (Serial != null) Serial.WriteLine(str); }
+
+        public void DisconnectDevice()
+        { if (Serial != null) Serial.Dispose(); IsConnected = false; }
+
     }
 }

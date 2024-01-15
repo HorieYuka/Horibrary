@@ -12,8 +12,6 @@ namespace BasicTemplate.Base
         PackIconKind PageIcon { get; }
         string PageName { get; }
         short PageNum { get; }
-
-        void RetrieveState();
     }
 
     interface IExample

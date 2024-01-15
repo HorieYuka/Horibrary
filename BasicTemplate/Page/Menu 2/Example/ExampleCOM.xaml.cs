@@ -36,6 +36,19 @@ namespace BasicTemplate.Example
         public string ExampleName => "COM 장비";
         public short ExampleNum => 0;
 
+        public int SelectedIdx { get; set; }
+
+        private vmSlotCOM _CurrentSess;
+        public vmSlotCOM CurrentSess
+
+        {
+            get => _CurrentSess;
+            set
+            {
+                _CurrentSess = value;
+                OnPropertyChanged("CurrentSess");
+            }
+        }
 
         public ObservableCollection<vmSlotCOM> ListCOM { get; set; }
 
@@ -45,7 +58,8 @@ namespace BasicTemplate.Example
             get
             {
                 if (_FindCOMs == null)
-                    _FindCOMs = new BaseCommand(p => {
+                    _FindCOMs = new BaseCommand(p =>
+                    {
 
                         ListCOM.Clear();
 
@@ -60,11 +74,11 @@ namespace BasicTemplate.Example
                                 if (COMs[i] == null) continue;
                                 else
                                 {
-                                    ListCOM.Add(new vmSlotCOM( 
-                                        new ModelCOM() { 
-                                        Name = Portnames[i], 
-                                        Port = COMs[i] 
-                                        }));
+                                    ListCOM.Add(new vmSlotCOM(
+                                            _Idx: i,
+                                            _Port: Portnames[i],
+                                            _Name: COMs[i]
+                                            ));
                                 }
 
                             }
@@ -81,7 +95,8 @@ namespace BasicTemplate.Example
             get
             {
                 if (_ReadCOM == null)
-                    _ReadCOM = new BaseCommand(p => {
+                    _ReadCOM = new BaseCommand(p =>
+                    {
 
                     });
                 return _ReadCOM;
@@ -94,10 +109,43 @@ namespace BasicTemplate.Example
             get
             {
                 if (_WriteCOM == null)
-                    _WriteCOM = new BaseCommand(p => {
-                       
+                    _WriteCOM = new BaseCommand(p =>
+                    {
+
                     });
                 return _WriteCOM;
+            }
+        }
+
+        private ICommand _ConDeviceCmd;
+        public ICommand ConDeviceCmd
+        {
+            get
+            {
+                if (_ConDeviceCmd == null)
+                    _ConDeviceCmd = new BaseCommand(p =>
+                    {
+                        int Idx = (int)p;
+
+                        ListCOM[Idx].ConnectDevice();
+                    });
+                return _ConDeviceCmd;
+            }
+        }
+
+        private ICommand _DisconDeviceCmd;
+        public ICommand DisconDeviceCmd
+        {
+            get
+            {
+                if (_DisconDeviceCmd == null)
+                    _DisconDeviceCmd = new BaseCommand(p =>
+                    {
+                        int Idx = (int)p;
+
+                        ListCOM[Idx].DisconnectDevice();
+                    });
+                return _DisconDeviceCmd;
             }
         }
 
