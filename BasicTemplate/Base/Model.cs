@@ -1,24 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace BasicTemplate.Base
 {
     class ModelBase : ObservableObject
     {
         // Insert common  properties here.
-    }
-
-    class ModelCOM : ModelBase
-    {
-        public bool IsConnected { get; set; }
-
-        public string Port { get; set; }
-        public string Name { get; set; }
-        public int Baudrate { get; set; }
     }
 
     class BelowStatusModel : ModelBase
@@ -78,6 +71,12 @@ namespace BasicTemplate.Base
     {
         public static readonly double MaxPlotBuffLength = 1000;
         public static readonly double MeasureTimeLimit = 60;
+    }
+
+    static class ModelConstDevice1
+    {
+        public static readonly string[] BaudrateList =
+            ["2400", "4800", "9600", "14400", "19200", " 28800", "38400", "57600", "76800", "115200", "230400"];
     }
 
     #endregion

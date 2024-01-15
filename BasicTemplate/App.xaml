@@ -66,6 +66,9 @@
             <DataTemplate DataType="{x:Type Control:vmSlotCOM}">
                 <Control:SlotCOM />
             </DataTemplate>
+            <DataTemplate DataType="{x:Type Control:vmSlotGPIB}">
+                <Control:SlotGPIB />
+            </DataTemplate>
 
             <!--Styles-->
             <!-- Low opacity FAB -->

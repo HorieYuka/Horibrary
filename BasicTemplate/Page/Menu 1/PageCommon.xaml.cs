@@ -46,8 +46,6 @@ namespace BasicTemplate.Page
             }
         }
 
-        public void RetrieveState() { }
-
 
     }
 }

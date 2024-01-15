@@ -11,6 +11,7 @@
 
     <MaterialDesign:Card Margin="2.5">
         <TabControl MaterialDesign:ColorZoneAssist.Mode="Standard"
+                    SelectedIndex="{Binding CurrentTabIdx}"
                     TabStripPlacement="Left">
             <TabItem Height="Auto">
                 <TabItem.Header>
