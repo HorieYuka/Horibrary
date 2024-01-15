@@ -1,6 +1,5 @@
 ﻿using BasicTemplate.Base;
-using System;
-using System.Collections.Generic;
+using Ivi.Visa;
 using System.IO.Ports;
 using System.Linq;
 using System.Text;
@@ -18,25 +17,25 @@ using System.Windows.Shapes;
 namespace BasicTemplate.Control
 {
     /// <summary>
-    /// SlotCOM.xaml에 대한 상호 작용 논리
+    /// SlotGPIB.xaml에 대한 상호 작용 논리
     /// </summary>
-    public partial class SlotCOM : UserControl
+    public partial class SlotGPIB : UserControl
     {
-        public SlotCOM()
+        public SlotGPIB()
         {
             InitializeComponent();
         }
     }
 
-    class vmSlotCOM : ObservableObject
+    class vmSlotGPIB : ObservableObject
     {
 
         public int Idx { get; set; }
         public string Port { get; set; }
-        public string Name { get; set; }
+        public string DeviceName { get; set; }
 
 
-        private SerialPort Serial;
+        private IMessageBasedSession Device { get; set; }
         private Paragraph Pl;
 
         private bool _IsConnected;
@@ -72,12 +71,9 @@ namespace BasicTemplate.Control
             }
         }
 
-        public vmSlotCOM(int _Idx, string _Name, string _Port)
+        public vmSlotGPIB(string _DeviceName)
         {
-            Idx = _Idx;
-            Name = _Name;
-            Port = _Port;
-            BaudrateIdx = -1;
+            DeviceName = _DeviceName;
 
             Log = new RichTextBox();
             Log.Document.Blocks.Clear();
@@ -92,20 +88,8 @@ namespace BasicTemplate.Control
         {
             DisconnectDevice();
 
-            if (BaudrateIdx != -1)
-            {
-                string Baudrate = ModelConstDevice1.BaudrateList[BaudrateIdx];
-                Serial = new SerialPort(Port, int.Parse(Baudrate));
-            }
-            else
-            {
-                Serial = new SerialPort(Port);
-                BaudrateIdx =
-                    Array.FindIndex(ModelConstDevice1.BaudrateList, s => s.StartsWith(Serial.BaudRate.ToString()));
-            }
+            Device = GlobalResourceManager.Open(DeviceName) as IMessageBasedSession;
 
-            Serial.ReadTimeout = 3000;
-            Serial.Open();
             IsConnected = true;
 
         }
@@ -114,11 +98,11 @@ namespace BasicTemplate.Control
         {
             string Out = "";
 
-            if (Serial != null)
+            if (Device != null)
             {
                 try
                 {
-                    Out = Serial.ReadLine();
+                    Out = Device.RawIO.ReadString();
 
                     if (string.IsNullOrEmpty(Out))
                     {
@@ -148,21 +132,22 @@ namespace BasicTemplate.Control
 
         public void WriteDevice(string str)
         {
-            if (!string.IsNullOrEmpty(str) && Serial != null)
+            if (!string.IsNullOrEmpty(str) && Device != null)
             {
-                Serial.WriteLine(str);
+                Device.RawIO.Write(str);
 
-                Pl.Inlines.Add(new Run(" " + str + "\n") { 
-                    FontSize = 16, 
-                    Foreground = new SolidColorBrush(Colors.Green) });
+                Pl.Inlines.Add(new Run(" " + str + "\n")
+                {
+                    FontSize = 16,
+                    Foreground = new SolidColorBrush(Colors.Green)
+                });
 
             }
             ReadDevice();
-       
+
         }
 
         public void DisconnectDevice()
-        { if (Serial != null) Serial.Dispose(); IsConnected = false; }
-
+        { if (Device != null) Device.Dispose(); IsConnected = false; }
     }
 }
