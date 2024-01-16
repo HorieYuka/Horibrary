@@ -42,7 +42,7 @@
                                 Height="40"
                                 HorizontalAlignment="Right"
                                 Style="{StaticResource MaterialDesignIconButton}"
-                                Command="{Binding FindCOMs}">
+                                Command="{Binding FindGPIBs}">
                             <MaterialDesign:PackIcon Kind="Refresh"
                                                      Width="30"
                                                      Height="30" />
@@ -54,7 +54,7 @@
                 <ScrollViewer Grid.Row="2">
                     <ListView HorizontalContentAlignment="Stretch"
                               SelectedItem="{Binding CurrentSess}"
-                              ItemsSource="{Binding ListCOM}" />
+                              ItemsSource="{Binding ListGPIB}" />
                 </ScrollViewer>
             </Grid>
             <Border Grid.Column="1"

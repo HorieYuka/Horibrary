@@ -106,7 +106,7 @@
                             <TextBox Grid.Column="0"
                                      MaterialDesign:TextFieldAssist.TextBoxViewMargin="10,0,35,0"
                                      FontSize="16"
-                                     Text="{Binding Word}">
+                                     Text="{Binding Word, UpdateSourceTrigger=PropertyChanged}">
                                 <TextBox.InputBindings>
                                     <KeyBinding Key="Return"
                                                 Command="{Binding WriteDeviceCmd}" />

@@ -1,6 +1,5 @@
 ﻿using BasicTemplate.Base;
 using BasicTemplate.Control;
-using Ivi.Visa;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO.Ports;
@@ -17,6 +16,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ClassLib;
 
 namespace BasicTemplate.Example
 {
@@ -73,19 +73,7 @@ namespace BasicTemplate.Example
                 if (_FindGPIBs == null)
                     _FindGPIBs = new BaseCommand(p =>
                     {
-
-                        ListGPIB.Clear();
-
-                        // Get GPIB Peripherals
-                        try
-                        {
-                            var Devices = GlobalResourceManager.Find("(GPIB|USB)?*").ToArray();
-
-                            for (int i = 0; i < Devices.Count(); i++)
-                                ListGPIB.Add(new vmSlotGPIB(Devices[i]));
-
-                        }
-                        catch { /* GPIB Exceptions */ };
+                        ClassLib.Class1.m();
                     });
                 return _FindGPIBs;
             }

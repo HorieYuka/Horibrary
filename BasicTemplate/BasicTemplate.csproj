@@ -24,7 +24,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Kelary.Ivi.Visa" Version="7.2.0" />
+    <None Remove="Reference\Ivi.Visa.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="MaterialDesignThemes" Version="4.9.0" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.77" />
     <PackageReference Include="ScottPlot.WPF" Version="4.1.70" />
@@ -38,6 +41,13 @@
 
   <ItemGroup>
     <Folder Include="Page\Menu 3\" />
+    <Folder Include="Reference\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="ClassLib">
+      <HintPath>..\ClassLib\bin\Debug\netstandard2.0\ClassLib.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

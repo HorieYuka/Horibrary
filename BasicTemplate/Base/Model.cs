@@ -77,6 +77,7 @@ namespace BasicTemplate.Base
     {
         public static readonly string[] BaudrateList =
             ["2400", "4800", "9600", "14400", "19200", " 28800", "38400", "57600", "76800", "115200", "230400"];
+        public static readonly int GetBufferLength = 4096;
     }
 
     #endregion
