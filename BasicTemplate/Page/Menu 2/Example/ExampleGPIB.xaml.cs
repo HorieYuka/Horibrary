@@ -76,9 +76,21 @@ namespace BasicTemplate.Example
                         LibraryVISA Lib = new LibraryVISA();
                         Lib.FindResource();
 
+                        int a = Lib.GetDeviceCount();
+
+                        byte[] buffer = new byte[256];
                         unsafe
                         {
-                            var vb = Lib.GetDescList();
+                            var vb = Lib.GetDeviceInfo(0);
+
+                            fixed (byte* ptr_byte = &buffer[0])
+                            {
+                                // Cast the pointer to sbyte*
+                                byte* ptr_sbyte = (byte*)  vb ;
+
+                                // Do your stuff here
+                            }
+
                         }
 
                         

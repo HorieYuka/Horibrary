@@ -8,9 +8,14 @@
 class Library
 {
 public:
-    char** GetDescList();
+    int GetDeviceCount();
+    char* GetDeviceInfo(int DeviceIdx);
+
     bool FindResource();
-    bool OpenSession(int Idx);
-    bool CloseSession(int Idx);
+    bool OpenSession(int DeviceIdx);
+    bool CloseSession(int DeviceIdx);
     bool DisposeManager();
+
+    bool IOWrite(int DeviceIdx, char* Str, unsigned int StrLen);
+    unsigned char* IORead(int DeviceIdx, char* Str, unsigned int StrLen);
 };

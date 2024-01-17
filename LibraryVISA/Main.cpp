@@ -2,13 +2,13 @@
 
 #include "LibraryVISA.h"
 
-char** InstDescriptor;
+char* InstDescriptor;
 
 int main() 
 {
 	Library* Lib = new Library();
 	Lib->FindResource();
-	InstDescriptor = Lib->GetDescList();
+	InstDescriptor = Lib->GetDeviceInfo(1);
 
 	return 0;
 }

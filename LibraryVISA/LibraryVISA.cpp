@@ -4,31 +4,38 @@
 #include "visa.h"
 
 const int DeviceLimit = 20;
+unsigned int DeviceCount;
+
 
 ViFindList FindList;
 ViSession ResourceManager;
 
 ViSession SessionList[DeviceLimit];
+
+bool bIsSessOpened[DeviceLimit];
 char InstDescriptor[DeviceLimit][VI_FIND_BUFLEN];
 
-char** Library::GetDescList()
+
+char* Library::GetDeviceInfo(int Idx)
 {
-    char** Out = new char* [DeviceLimit];
-    for (int i = 0; i < DeviceLimit; i++) {
-        Out[i] = new char[VI_FIND_BUFLEN];
-        
-        for (int j = 0; j < VI_FIND_BUFLEN; j++)
-            Out[i] = &InstDescriptor[i][j];
-    }
+    char* Out = new char[VI_FIND_BUFLEN];
+
+    for (int j = 0; j < VI_FIND_BUFLEN; j++)
+        Out = &InstDescriptor[Idx][j];
 
     return Out;
+}
+
+int Library::GetDeviceCount()
+{
+    return DeviceCount;
 }
 
 bool Library::FindResource()
 {
     ViStatus Status;
 
-    ViUInt32 DeviceCount;
+    ViUInt32 Count;
     ViUInt32 Inst;
 
     char Dummy[VI_FIND_BUFLEN];
@@ -42,7 +49,7 @@ bool Library::FindResource()
     }
 
     // Find resources
-    Status = viFindRsrc(ResourceManager, "?*INSTR", &FindList, &DeviceCount, Dummy);
+    Status = viFindRsrc(ResourceManager, "?*INSTR", &FindList, &Count, Dummy);
     if (Status < VI_SUCCESS)
     {
         printf("Error occured.");
@@ -51,45 +58,49 @@ bool Library::FindResource()
         return false;
     }
 
-    // Find all instrument
-    while (--DeviceCount)
-    {
-        Status = viFindNext(FindList, InstDescriptor[DeviceCount - 1]);
-        if (Status < VI_SUCCESS)
-            return false;
+    DeviceCount = Count;
 
-        OpenSession(DeviceCount - 1);
-        CloseSession(DeviceCount - 1);
+    // Find all instrument
+    for (int i = 0; i < Count; i++)
+    {
+        OpenSession(Count);
+        CloseSession(Count);
+
+        Status = viFindNext(FindList, InstDescriptor[Count]);
+        if (Status < VI_SUCCESS)
+            break;
     }
 
     return true;
 }
 
-bool Library::OpenSession(int Idx)
+bool Library::OpenSession(int DeviceIdx)
 {
     ViStatus Status;
 
-    Status = viOpen(ResourceManager, InstDescriptor[Idx], VI_NULL, VI_NULL, &SessionList[Idx]);
+    Status = viOpen(ResourceManager, InstDescriptor[DeviceIdx], VI_NULL, VI_NULL, &SessionList[DeviceIdx]);
     if (Status < VI_SUCCESS)
     {
         printf("Could not open a session\n");
         return false;
     }
 
-
+    bIsSessOpened[DeviceIdx] = true;
     return true;
 }
 
-bool Library::CloseSession(int Idx)
+bool Library::CloseSession(int DeviceIdx)
 {
     ViStatus Status;
 
-    Status = viClose(SessionList[Idx]);
+    Status = viClose(SessionList[DeviceIdx]);
     if (Status < VI_SUCCESS)
     {
         printf("Could not close a session\n");
         return false;
     }
+
+    bIsSessOpened[DeviceIdx] = false;
 
     return true;
 }
@@ -112,4 +123,45 @@ bool Library::DisposeManager()
     return true;
 }
 
+bool Library::IOWrite(int DeviceIdx, char* Str, unsigned int StrLen)
+{
+    ViStatus Status;v
+    ViUInt32 Writecount; // It referrs actual write length. Considering it as a dummy.
+
+    if (!bIsSessOpened[DeviceIdx])
+        return false;
+    else
+    {
+        Status = viWrite(SessionList[DeviceIdx], (ViBuf) Str, (ViUInt32)StrLen, &Writecount);
+        if (Status < VI_SUCCESS)
+        {
+            printf("Error writing to the device\n");
+            return false;
+        }
+    }
+
+    return true;
+}
+
+unsigned char* Library::IORead(int DeviceIdx, char* Str, unsigned int StrLen)
+{
+    ViStatus Status;
+    ViUInt32 RetCount; // It referrs actual read length. Considering it as a dummy.
+
+    unsigned char Out[256];
+
+    if (!bIsSessOpened[DeviceIdx])
+        return Out;
+    else
+    {
+        Status = viRead(SessionList[DeviceIdx], Out, 256, &RetCount);
+        if (Status < VI_SUCCESS)
+        {
+            printf("Error writing to the device\n");
+            return Out;
+        }
+    }
+
+    return Out;
+}
 
