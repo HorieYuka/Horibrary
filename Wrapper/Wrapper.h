@@ -1,10 +1,20 @@
 ﻿#pragma once
 
-using namespace System;
+#include "C:\repo\HorieYuka\Horibrary\LibraryVISA\LibraryVISA.h"
+#include "C:\repo\HorieYuka\Horibrary\LibraryVISA\LibraryVISA.cpp"
 
 namespace Wrapper {
-	public ref class Class1
+	public ref class LibraryVISA
 	{
-		// TODO: 여기에 이 클래스에 대한 메서드를 추가합니다.
+	public:
+		LibraryVISA();
+
+		char** GetDescList();
+		bool FindResource();
+		bool OpenSession(int Idx);
+		bool CloseSession(int Idx);
+		bool DisposeManager();
+
+		Library* Lib;
 	};
 }

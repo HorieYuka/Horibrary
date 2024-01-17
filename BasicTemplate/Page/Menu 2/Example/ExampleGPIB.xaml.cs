@@ -16,7 +16,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using ClassLib;
+using Wrapper;
 
 namespace BasicTemplate.Example
 {
@@ -73,7 +73,15 @@ namespace BasicTemplate.Example
                 if (_FindGPIBs == null)
                     _FindGPIBs = new BaseCommand(p =>
                     {
-                        ClassLib.Class1.m();
+                        LibraryVISA Lib = new LibraryVISA();
+                        Lib.FindResource();
+
+                        unsafe
+                        {
+                            var vb = Lib.GetDescList();
+                        }
+
+                        
                     });
                 return _FindGPIBs;
             }

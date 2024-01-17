@@ -6,6 +6,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
@@ -45,9 +46,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="ClassLib">
-      <HintPath>..\ClassLib\bin\Debug\netstandard2.0\ClassLib.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\Wrapper\Wrapper.vcxproj" />
   </ItemGroup>
 
 </Project>

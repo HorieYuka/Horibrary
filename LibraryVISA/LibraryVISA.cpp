@@ -1,140 +1,115 @@
-#include <iostream>
-#include <stdio.h>
-#include <stdlib.h>
+#pragma once
 
+#include "LibraryVISA.h"
 #include "visa.h"
 
-namespace VISA
+const int DeviceLimit = 20;
+
+ViFindList FindList;
+ViSession ResourceManager;
+
+ViSession SessionList[DeviceLimit];
+char InstDescriptor[DeviceLimit][VI_FIND_BUFLEN];
+
+char** Library::GetDescList()
 {
-    static char instrDescriptor[VI_FIND_BUFLEN];
+    char** Out = new char* [DeviceLimit];
+    for (int i = 0; i < DeviceLimit; i++) {
+        Out[i] = new char[VI_FIND_BUFLEN];
+        
+        for (int j = 0; j < VI_FIND_BUFLEN; j++)
+            Out[i] = &InstDescriptor[i][j];
+    }
+
+    return Out;
+}
+
+bool Library::FindResource()
+{
     ViStatus Status;
-    ViFindList DeviceList;
-    ViUInt32 DeviceNumber;
 
-    ViStatus VISA::FindResource()
+    ViUInt32 DeviceCount;
+    ViUInt32 Inst;
+
+    char Dummy[VI_FIND_BUFLEN];
+
+    // Open resource manager.
+    Status = viOpenDefaultRM(&ResourceManager);
+    if (Status < VI_SUCCESS)
     {
-        ViStatus Status;
-
-        // Open resource manager.
-        Status = viOpenDefaultRM(&defaultRM);
-        if (Status < VI_SUCCESS)
-        {
-            printf("Could not open a session to the VISA Resource Manager!\n");
-            return Status;
-        }
-
-        // Find resources
-        Status = viFindRsrc(defaultRM, "?*INSTR", &DeviceList, &numInstrs, instrDescriptor);
-        if (Status < VI_SUCCESS)
-        {
-            printf("Error occured.");
-            fflush(stdin);
-            viClose(defaultRM);
-            return Status;
-        }
+        printf("Cannot open VISA Resource manager\n");
+        return false;
     }
 
-    ViStatus VISA::OpenResource() 
+    // Find resources
+    Status = viFindRsrc(ResourceManager, "?*INSTR", &FindList, &DeviceCount, Dummy);
+    if (Status < VI_SUCCESS)
     {
-
-    }
-}
-
-static char instrDescriptor[VI_FIND_BUFLEN];
-static ViUInt32 numInstrs;
-static ViFindList findList;
-static ViSession defaultRM, instr;
-static ViStatus status;
-
-
-
-int main(void)
-{
-    /* First we will need to open the default resource manager. */
-    status = viOpenDefaultRM(&defaultRM);
-    if (status < VI_SUCCESS)
-    {
-        printf("Could not open a session to the VISA Resource Manager!\n");
-        exit(EXIT_FAILURE);
-    }
-
-    /*
-     * Find all the VISA resources in our system and store the number of resources
-     * in the system in numInstrs.  Notice the different query descriptions a
-     * that are available.
-
-        Interface         Expression
-    --------------------------------------
-        GPIB              "GPIB[0-9]*::?*INSTR"
-        VXI               "VXI?*INSTR"
-        GPIB-VXI          "GPIB-VXI?*INSTR"
-        Any VXI           "?*VXI[0-9]*::?*INSTR"
-        Serial            "ASRL[0-9]*::?*INSTR"
-        PXI               "PXI?*INSTR"
-        All instruments   "?*INSTR"
-        All resources     "?*"
-    */
-    status = viFindRsrc(defaultRM, "?*INSTR", &findList, &numInstrs, instrDescriptor);
-    if (status < VI_SUCCESS)
-    {
-        printf("An error occurred while finding resources.\nHit enter to continue.");
+        printf("Error occured.");
         fflush(stdin);
-        getchar();
-        viClose(defaultRM);
-        return status;
+        viClose(ResourceManager);
+        return false;
     }
 
-    printf("%d instruments, serial ports, and other resources found:\n\n", numInstrs);
-    printf("%s \n", instrDescriptor);
+    // Find all instrument
+    while (--DeviceCount)
+    {
+        Status = viFindNext(FindList, InstDescriptor[DeviceCount - 1]);
+        if (Status < VI_SUCCESS)
+            return false;
 
-    /* Now we will open a session to the instrument we just found. */
-    status = viOpen(defaultRM, instrDescriptor, VI_NULL, VI_NULL, &instr);
-    if (status < VI_SUCCESS)
-    {
-        printf("An error occurred opening a session to %s\n", instrDescriptor);
-    }
-    else
-    {
-        /* Now close the session we just opened.                            */
-        /* In actuality, we would probably use an attribute to determine    */
-        /* if this is the instrument we are looking for.                    */
-        viClose(instr);
+        OpenSession(DeviceCount - 1);
+        CloseSession(DeviceCount - 1);
     }
 
-    while (--numInstrs)
-    {
-        /* stay in this loop until we find all instruments */
-        status = viFindNext(findList, instrDescriptor);  /* find next desriptor */
-        if (status < VI_SUCCESS)
-        {   /* did we find the next resource? */
-            printf("An error occurred finding the next resource.\nHit enter to continue.");
-            fflush(stdin);
-            getchar();
-            viClose(defaultRM);
-            return status;
-        }
-        printf("%s \n", instrDescriptor);
-
-        /* Now we will open a session to the instrument we just found */
-        status = viOpen(defaultRM, instrDescriptor, VI_NULL, VI_NULL, &instr);
-        if (status < VI_SUCCESS)
-        {
-            printf("An error occurred opening a session to %s\n", instrDescriptor);
-        }
-        else
-        {
-            /* Now close the session we just opened.                            */
-            /* In actuality, we would probably use an attribute to determine    */
-            /* if this is the instrument we are looking for.                    */
-            viClose(instr);
-        }
-    }    /* end while */
-
-    status = viClose(findList);
-    status = viClose(defaultRM);
-    printf("\nHit enter to continue.");
-    fflush(stdin);
-    getchar();
-
-    return 0;
+    return true;
 }
+
+bool Library::OpenSession(int Idx)
+{
+    ViStatus Status;
+
+    Status = viOpen(ResourceManager, InstDescriptor[Idx], VI_NULL, VI_NULL, &SessionList[Idx]);
+    if (Status < VI_SUCCESS)
+    {
+        printf("Could not open a session\n");
+        return false;
+    }
+
+
+    return true;
+}
+
+bool Library::CloseSession(int Idx)
+{
+    ViStatus Status;
+
+    Status = viClose(SessionList[Idx]);
+    if (Status < VI_SUCCESS)
+    {
+        printf("Could not close a session\n");
+        return false;
+    }
+
+    return true;
+}
+
+
+bool Library::DisposeManager()
+{
+    ViStatus Status;
+
+    Status = viClose(FindList);
+    Status = viClose(ResourceManager);
+    fflush(stdin);
+
+    if (Status < VI_SUCCESS)
+    {
+        printf("Could not dispose\n");
+        return false;
+    }
+
+    return true;
+}
+
+
