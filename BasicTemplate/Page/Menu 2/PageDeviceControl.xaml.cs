@@ -54,7 +54,8 @@ namespace BasicTemplate.Page
             ExampleList =
             [
                 new vmExampleCOM(),
-                new vmExampleGPIB()
+                new vmExampleGPIB(),
+                new vmExampleCameraDraw()
             ];
             
 

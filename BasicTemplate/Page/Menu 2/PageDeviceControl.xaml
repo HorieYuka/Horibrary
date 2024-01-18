@@ -69,6 +69,35 @@
                 <ContentControl Margin="5"
                                 Content="{Binding ExampleList[1]}" />
             </TabItem>
+            <TabItem Height="Auto">
+                <TabItem.Header>
+                    <Border Width="350"
+                            Height="50"
+                            CornerRadius="5"
+                            BorderBrush="Black"
+                            BorderThickness="2">
+                        <Grid>
+                            <StackPanel Orientation="Horizontal"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Left">
+                                <MaterialDesign:PackIcon Margin="10,0"
+                                                         Kind="CircleMedium" />
+                                <TextBlock FontSize="15"
+                                           Text="{Binding ExampleList[2].ExampleName}" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Right">
+                                <MaterialDesign:PackIcon Width="25"
+                                                         Height="25"
+                                                         Kind="ChevronRight" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </TabItem.Header>
+                <ContentControl Margin="5"
+                                Content="{Binding ExampleList[2]}" />
+            </TabItem>
         </TabControl>
     </MaterialDesign:Card>
 </UserControl>
