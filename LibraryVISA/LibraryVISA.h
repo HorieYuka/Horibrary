@@ -17,5 +17,5 @@ public:
     bool DisposeManager();
 
     bool IOWrite(int DeviceIdx, char* Str, unsigned int StrLen);
-    unsigned char* IORead(int DeviceIdx, char* Str, unsigned int StrLen);
+    unsigned char* IORead(int DeviceIdx);
 };

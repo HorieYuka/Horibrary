@@ -20,10 +20,9 @@ namespace BasicTemplate.Control
     class vmSlotGPIB : ObservableObject
     {
 
-        public int Idx { get; set; }
+        public int DeviceIdx { get; set; }
         public string Port { get; set; }
         public string DeviceName { get; set; }
-
 
         private Paragraph Pl;
 
@@ -38,17 +37,6 @@ namespace BasicTemplate.Control
             }
         }
 
-        private int _BaudrateIdx;
-        public int BaudrateIdx
-        {
-            get => _BaudrateIdx;
-            set
-            {
-                _BaudrateIdx = value;
-                OnPropertyChanged("BaudrateIdx");
-            }
-        }
-
         private RichTextBox _Log;
         public RichTextBox Log
         {
@@ -60,9 +48,10 @@ namespace BasicTemplate.Control
             }
         }
 
-        public vmSlotGPIB(string _DeviceName)
+        public vmSlotGPIB(string _DeviceName, int _DeviceIdx)
         {
             DeviceName = _DeviceName;
+            DeviceIdx = _DeviceIdx;
 
             Log = new RichTextBox();
             Log.Document.Blocks.Clear();
@@ -73,32 +62,41 @@ namespace BasicTemplate.Control
             Log.Document.Blocks.Add(Pl);
         }
 
-        public void ConnectDevice()
-        {
-            DisconnectDevice();
-
-
-
-            IsConnected = true;
-
-        }
-
-        public void ReadDevice()
-        {
-
-        }
-
-
         public void ClearLog()
             => Pl.Inlines.Clear();
 
-        public void WriteDevice(string str)
+        public void UpdateReadLog(string str)
         {
+            string[] Sp = str.Split(new string[] { "\r\n" }, StringSplitOptions.None);
+
+            if (Sp.Count() != 2)
+            {
+                Pl.Inlines.Add(new Run(" " + "Request time out." + "\n")
+                {
+                    FontSize = 16,
+                    Foreground = new SolidColorBrush(Colors.Red)
+                });
+            }
+            else
+            {
+                Pl.Inlines.Add(new Run(" " + Sp[0] + "\n")
+                {
+                    FontSize = 16,
+                    Foreground = new SolidColorBrush(Colors.Green)
+                });
+            }
+        }
+
+        public void UpdateWriteLog(string str)
+        {
+            Pl.Inlines.Add(new Run(" " + str + "\n")
+            {
+                FontSize = 16,
+                Foreground = new SolidColorBrush(Colors.Blue)
+            });
 
 
         }
 
-        public void DisconnectDevice()
-        {  }
     }
 }

@@ -80,5 +80,10 @@ namespace BasicTemplate.Base
         public static readonly int GetBufferLength = 4096;
     }
 
+    static class ModelConstDevice2
+    {
+        public static readonly int IO_OUT_BUFLEN = 128;
+    }
+
     #endregion
 }

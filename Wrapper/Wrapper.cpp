@@ -42,7 +42,7 @@ bool Wrapper::LibraryVISA::IOWrite(int DeviceIdx, char* Str, unsigned int StrLen
 {
 	return Lib->IOWrite(DeviceIdx, Str,StrLen);
 }
-unsigned char* Wrapper::LibraryVISA::IORead(int DeviceIdx, char* Str, unsigned int StrLen)
+unsigned char* Wrapper::LibraryVISA::IORead(int DeviceIdx)
 {
-	return Lib->IORead(DeviceIdx, Str, StrLen);
+	return Lib->IORead(DeviceIdx);
 }

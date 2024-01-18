@@ -2,9 +2,11 @@
 using BasicTemplate.Control;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Drawing;
 using System.IO.Ports;
 using System.Linq;
 using System.Management;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -38,6 +40,8 @@ namespace BasicTemplate.Example
 
         public ObservableCollection<vmSlotGPIB> ListGPIB { get; set; }
         public int SelectedIdx { get; set; }
+
+        private LibraryVISA Lib;
 
 
         private string _Word;
@@ -76,23 +80,15 @@ namespace BasicTemplate.Example
                         LibraryVISA Lib = new LibraryVISA();
                         Lib.FindResource();
 
-                        int a = Lib.GetDeviceCount();
-
-                        byte[] buffer = new byte[256];
+                        int DeviceCount = Lib.GetDeviceCount();
                         unsafe
                         {
-                            var vb = Lib.GetDeviceInfo(0);
-
-                            fixed (byte* ptr_byte = &buffer[0])
+                            for (int i = 0; i < DeviceCount; i++)
                             {
-                                // Cast the pointer to sbyte*
-                                byte* ptr_sbyte = (byte*)  vb ;
-
-                                // Do your stuff here
+                                string Info = new string(Lib.GetDeviceInfo(i));
+                                ListGPIB.Add(new vmSlotGPIB(Info, i));
                             }
-
                         }
-
                         
                     });
                 return _FindGPIBs;
@@ -108,7 +104,21 @@ namespace BasicTemplate.Example
                     _ReadDeviceCmd = new BaseCommand(p =>
                     {
                         if (CurrentSess != null)
-                            CurrentSess.ReadDevice();
+                        {
+                            string Str = "";
+
+                            unsafe
+                            {
+                                var Bptr = Lib.IORead(0);
+
+                                byte[] Barr = new byte[ModelConstDevice2.IO_OUT_BUFLEN];
+                                Marshal.Copy((IntPtr) Bptr, Barr, 0, ModelConstDevice2.IO_OUT_BUFLEN);
+
+                                Str = Encoding.Default.GetString(Barr);  
+                            }
+
+                            CurrentSess.UpdateReadLog(Str);
+                        }
                     });
                 return _ReadDeviceCmd;
             }
@@ -123,7 +133,21 @@ namespace BasicTemplate.Example
                     _WriteDeviceCmd = new BaseCommand(p =>
                     {
                         if (CurrentSess != null)
-                            CurrentSess.WriteDevice(Word);
+                        {
+                            unsafe
+                            {
+                                byte[] Bts = Encoding.ASCII.GetBytes(Word);
+
+                                fixed (byte* Bptr = Bts)
+                                {
+                                    sbyte* Sptr = (sbyte*)Bptr;
+
+                                    Lib.IOWrite(0, Sptr, (uint)Word.Length);
+                                }
+                            }
+                            CurrentSess.UpdateWriteLog(Word);
+                        }
+                            
                     });
                 return _WriteDeviceCmd;
             }
@@ -137,10 +161,12 @@ namespace BasicTemplate.Example
                 if (_ConDeviceCmd == null)
                     _ConDeviceCmd = new BaseCommand(p =>
                     {
-                        int Idx = (int)p;
+                        int DeviceIdx = (int)p;
 
-                        ListGPIB[Idx].ConnectDevice();
-                        CurrentSess = ListGPIB[Idx];
+                        Lib.OpenSession(DeviceIdx);
+                        CurrentSess = ListGPIB[DeviceIdx];
+
+                        CurrentSess.IsConnected = true;
                     });
                 return _ConDeviceCmd;
             }
@@ -154,9 +180,12 @@ namespace BasicTemplate.Example
                 if (_DisconDeviceCmd == null)
                     _DisconDeviceCmd = new BaseCommand(p =>
                     {
-                        int Idx = (int)p;
+                        int DeviceIdx = (int)p;
 
-                        ListGPIB[Idx].DisconnectDevice();
+                        Lib.CloseSession(DeviceIdx);
+                        CurrentSess = null;
+
+                        CurrentSess.IsConnected = false;
                     });
                 return _DisconDeviceCmd;
             }
@@ -191,6 +220,10 @@ namespace BasicTemplate.Example
         }
 
         public vmExampleGPIB()
-            => ListGPIB = new ObservableCollection<vmSlotGPIB>();
+        {
+            ListGPIB = new ObservableCollection<vmSlotGPIB>();
+            Lib = new LibraryVISA();
+        }
+
     }
 }

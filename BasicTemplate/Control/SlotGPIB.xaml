@@ -22,7 +22,7 @@
                                          Kind="CircleMedium" />
 
                 <TextBlock FontSize="15"
-                           Text="{Binding Name}" />
+                           Text="{Binding DeviceName}" />
             </StackPanel>
             <StackPanel Orientation="Horizontal"
                         VerticalAlignment="Center"
@@ -32,7 +32,7 @@
                         HorizontalAlignment="Right"
                         Style="{StaticResource MaterialDesignIconButton}"
                         Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListView}}, Path=DataContext.ConDeviceCmd}"
-                        CommandParameter="{Binding Idx}">
+                        CommandParameter="{Binding DeviceIdx}">
                     <MaterialDesign:PackIcon Kind="Connection" />
                 </Button>
                 <Button Margin="2.5,0"
@@ -40,7 +40,7 @@
                         HorizontalAlignment="Right"
                         Style="{StaticResource MaterialDesignIconButton}"
                         Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListView}}, Path=DataContext.DisconDeviceCmd}"
-                        CommandParameter="{Binding Idx}">
+                        CommandParameter="{Binding DeviceIdx}">
                     <MaterialDesign:PackIcon Kind="Cancel" />
                 </Button>
             </StackPanel>
