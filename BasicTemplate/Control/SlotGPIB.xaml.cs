@@ -1,18 +1,8 @@
 ﻿using BasicTemplate.Base;
-using Ivi.Visa;
-using System.IO.Ports;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace BasicTemplate.Control
 {
@@ -30,12 +20,10 @@ namespace BasicTemplate.Control
     class vmSlotGPIB : ObservableObject
     {
 
-        public int Idx { get; set; }
+        public int DeviceIdx { get; set; }
         public string Port { get; set; }
         public string DeviceName { get; set; }
 
-
-        private IMessageBasedSession Device { get; set; }
         private Paragraph Pl;
 
         private bool _IsConnected;
@@ -46,17 +34,6 @@ namespace BasicTemplate.Control
             {
                 _IsConnected = value;
                 OnPropertyChanged("IsConnected");
-            }
-        }
-
-        private int _BaudrateIdx;
-        public int BaudrateIdx
-        {
-            get => _BaudrateIdx;
-            set
-            {
-                _BaudrateIdx = value;
-                OnPropertyChanged("BaudrateIdx");
             }
         }
 
@@ -71,9 +48,10 @@ namespace BasicTemplate.Control
             }
         }
 
-        public vmSlotGPIB(string _DeviceName)
+        public vmSlotGPIB(string _DeviceName, int _DeviceIdx)
         {
             DeviceName = _DeviceName;
+            DeviceIdx = _DeviceIdx;
 
             Log = new RichTextBox();
             Log.Document.Blocks.Clear();
@@ -84,70 +62,41 @@ namespace BasicTemplate.Control
             Log.Document.Blocks.Add(Pl);
         }
 
-        public void ConnectDevice()
-        {
-            DisconnectDevice();
-
-            Device = GlobalResourceManager.Open(DeviceName) as IMessageBasedSession;
-
-            IsConnected = true;
-
-        }
-
-        public string ReadDevice()
-        {
-            string Out = "";
-
-            if (Device != null)
-            {
-                try
-                {
-                    Out = Device.RawIO.ReadString();
-
-                    if (string.IsNullOrEmpty(Out))
-                    {
-                        Pl.Inlines.Add(new Run(" " + Out + "\n")
-                        {
-                            FontSize = 16,
-                            Foreground = new SolidColorBrush(Colors.Blue)
-                        });
-                    }
-                }
-                catch
-                {
-                    Pl.Inlines.Add(new Run(" " + "Read time out. (3000ms)" + "\n")
-                    {
-                        FontSize = 16,
-                        Foreground = new SolidColorBrush(Colors.Red)
-                    });
-                }
-            }
-
-            return Out;
-        }
-
-
         public void ClearLog()
             => Pl.Inlines.Clear();
 
-        public void WriteDevice(string str)
+        public void UpdateReadLog(string str)
         {
-            if (!string.IsNullOrEmpty(str) && Device != null)
-            {
-                Device.RawIO.Write(str);
+            string[] Sp = str.Split(new string[] { "\r\n" }, StringSplitOptions.None);
 
-                Pl.Inlines.Add(new Run(" " + str + "\n")
+            if (Sp.Count() != 2)
+            {
+                Pl.Inlines.Add(new Run(" " + "Request time out." + "\n")
+                {
+                    FontSize = 16,
+                    Foreground = new SolidColorBrush(Colors.Red)
+                });
+            }
+            else
+            {
+                Pl.Inlines.Add(new Run(" " + Sp[0] + "\n")
                 {
                     FontSize = 16,
                     Foreground = new SolidColorBrush(Colors.Green)
                 });
-
             }
-            ReadDevice();
+        }
+
+        public void UpdateWriteLog(string str)
+        {
+            Pl.Inlines.Add(new Run(" " + str + "\n")
+            {
+                FontSize = 16,
+                Foreground = new SolidColorBrush(Colors.Blue)
+            });
+
 
         }
 
-        public void DisconnectDevice()
-        { if (Device != null) Device.Dispose(); IsConnected = false; }
     }
 }

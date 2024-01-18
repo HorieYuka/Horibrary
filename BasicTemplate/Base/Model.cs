@@ -77,6 +77,12 @@ namespace BasicTemplate.Base
     {
         public static readonly string[] BaudrateList =
             ["2400", "4800", "9600", "14400", "19200", " 28800", "38400", "57600", "76800", "115200", "230400"];
+        public static readonly int GetBufferLength = 4096;
+    }
+
+    static class ModelConstDevice2
+    {
+        public static readonly int IO_OUT_BUFLEN = 128;
     }
 
     #endregion

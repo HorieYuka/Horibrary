@@ -102,21 +102,6 @@ namespace BasicTemplate.Example
             }
         }
 
-        private ICommand _ReadDeviceCmd;
-        public ICommand ReadDeviceCmd
-        {
-            get
-            {
-                if (_ReadDeviceCmd == null)
-                    _ReadDeviceCmd = new BaseCommand(p =>
-                    {
-                        if (CurrentSess != null)
-                            CurrentSess.ReadDevice();
-                    });
-                return _ReadDeviceCmd;
-            }
-        }
-
         private ICommand _WriteDeviceCmd;
         public ICommand WriteDeviceCmd
         {
@@ -198,7 +183,10 @@ namespace BasicTemplate.Example
 
 
         public vmExampleCOM()
-            => ListCOM = new ObservableCollection<vmSlotCOM>();
+        {
+            ListCOM = new ObservableCollection<vmSlotCOM>();
+            Word = "";
+        }
     }
 
 }

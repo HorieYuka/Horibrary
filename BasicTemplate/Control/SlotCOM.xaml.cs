@@ -35,7 +35,6 @@ namespace BasicTemplate.Control
         public string Port { get; set; }
         public string Name { get; set; }
 
-
         private SerialPort Serial;
         private Paragraph Pl;
 
@@ -104,13 +103,17 @@ namespace BasicTemplate.Control
                     Array.FindIndex(ModelConstDevice1.BaudrateList, s => s.StartsWith(Serial.BaudRate.ToString()));
             }
 
+            Serial.ReadBufferSize = ModelConstDevice1.GetBufferLength;
             Serial.ReadTimeout = 3000;
             Serial.Open();
+
+            Serial.DataReceived += DataReceived;
+            
             IsConnected = true;
 
         }
 
-        public string ReadDevice()
+        private void DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             string Out = "";
 
@@ -120,28 +123,34 @@ namespace BasicTemplate.Control
                 {
                     Out = Serial.ReadLine();
 
-                    if (string.IsNullOrEmpty(Out))
+                    string[] Sp = Out.Split(new string[] { "\n", "\r" }, StringSplitOptions.None);
+
+                    if (Sp.Length != 0)
                     {
-                        Pl.Inlines.Add(new Run(" " + Out + "\n")
+                        string Str = "";
+
+                        for (int i = 0; i < Sp.Length; i++)
                         {
-                            FontSize = 16,
-                            Foreground = new SolidColorBrush(Colors.Blue)
+                            if (string.IsNullOrEmpty(Sp[i])) continue;
+
+                            Str += Sp[i];
+
+                        }
+
+                        UiInvoke(delegate
+                        {
+                            Pl.Inlines.Add(new Run(" " + Str + "\n")
+                            {
+                                FontSize = 16,
+                                Foreground = new SolidColorBrush(Colors.Green)
+                            });
+
                         });
                     }
                 }
-                catch
-                {
-                    Pl.Inlines.Add(new Run(" " + "Read time out. (3000ms)" + "\n")
-                    {
-                        FontSize = 16,
-                        Foreground = new SolidColorBrush(Colors.Red)
-                    });
-                }
+                catch { /* It's not Line */ };
             }
-
-            return Out;
         }
-
 
         public void ClearLog()
             => Pl.Inlines.Clear();
@@ -154,11 +163,9 @@ namespace BasicTemplate.Control
 
                 Pl.Inlines.Add(new Run(" " + str + "\n") { 
                     FontSize = 16, 
-                    Foreground = new SolidColorBrush(Colors.Green) });
+                    Foreground = new SolidColorBrush(Colors.Blue) });
 
             }
-            ReadDevice();
-       
         }
 
         public void DisconnectDevice()
