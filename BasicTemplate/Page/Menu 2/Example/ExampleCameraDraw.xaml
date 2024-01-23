@@ -4,6 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:Control="clr-namespace:BasicTemplate.Control"
+             xmlns:DD="urn:gong-wpf-dragdrop"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     
@@ -16,5 +18,15 @@
                 </StackPanel>
             </Grid>
         </GroupBox.Header>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Control:ListviewDraggable Grid.Column="0"
+                                       DataContext="{Binding ListSess}"/>
+            <Control:GridCameraSess Grid.Column="1"
+                                    DataContext="{Binding DisplaySess}"/>
+        </Grid>
     </GroupBox>
 </UserControl>

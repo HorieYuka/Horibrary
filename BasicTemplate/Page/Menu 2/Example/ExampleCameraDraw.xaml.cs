@@ -2,6 +2,7 @@
 using BasicTemplate.Control;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO.Ports;
 using System.Linq;
 using System.Management;
@@ -35,18 +36,28 @@ namespace BasicTemplate.Example
         public string ExampleName => "카메라";
         public short ExampleNum => 0;
 
-        public List<vmSlotCamera> ListCamera { get; set; }
+        public ObservableCollection<vmSlotCamera> ListCamera { get; set; }
 
 
-        private Grid _DisplayPanel;
-        public Grid DisplayPanel
-
+        private vmGridCameraSess _DisplaySess;
+        public vmGridCameraSess DisplaySess
         {
-            get => _DisplayPanel;
+            get => _DisplaySess;
             set
             {
-                _DisplayPanel = value;
-                OnPropertyChanged("DisplayPanel");
+                _DisplaySess = value;
+                OnPropertyChanged("DisplaySess");
+            }
+        }
+
+        private vmListviewDraggable _ListSess;
+        public vmListviewDraggable ListSess
+        {
+            get => _ListSess;
+            set
+            {
+                _ListSess = value;
+                OnPropertyChanged("ListSess");
             }
         }
 
@@ -79,16 +90,35 @@ namespace BasicTemplate.Example
             }
         }
 
+        private ICommand _AddCameraSessCmd;
+        public ICommand AddCameraSessCmd
+        {
+            get
+            {
+                if (_AddCameraSessCmd == null)
+                    _AddCameraSessCmd = new BaseCommand(p =>
+                    {
+                        var TargetCameraSess = (vmSlotCamera)p;
+
+                        if (ListCamera.Contains(TargetCameraSess))
+                            return;
+                        else
+                            ListCamera.Add(TargetCameraSess);
+
+                    });
+                return _AddCameraSessCmd;
+            }
+        }
+
+
         public vmExampleCameraDraw() 
         {
-            ListCamera = new List<vmSlotCamera>();
+            ListCamera = new ObservableCollection<vmSlotCamera>();
 
-            DisplayPanel = new Grid();
-            DisplayPanel.RowDefinitions.Add(new RowDefinition());
-            DisplayPanel.RowDefinitions.Add(new RowDefinition());
+            ListCamera.Add(new vmSlotCamera(1, "Dummy"));
 
-            DisplayPanel.ColumnDefinitions.Add(new ColumnDefinition());
-            DisplayPanel.ColumnDefinitions.Add(new ColumnDefinition());
+            DisplaySess = new vmGridCameraSess();
+            ListSess = new vmListviewDraggable(ListCamera);
 
         }
     }
