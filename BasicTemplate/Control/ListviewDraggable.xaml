@@ -9,14 +9,11 @@
              d:DesignWidth="800">
 
     <ListView HorizontalContentAlignment="Stretch"
-              DragOver="ListDragOver"
               ItemsSource="{Binding ListCamera}">
         <ListView.ItemContainerStyle>
             <Style TargetType="{x:Type ListViewItem}">
                 <EventSetter Event="MouseMove"
                              Handler="ItemMouseMove" />
-                <EventSetter Event="DragOver"
-                             Handler="ItemDragOver" />
             </Style>
         </ListView.ItemContainerStyle>
 

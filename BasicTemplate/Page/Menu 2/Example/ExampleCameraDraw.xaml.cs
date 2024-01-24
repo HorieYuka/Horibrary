@@ -31,7 +31,7 @@ namespace BasicTemplate.Example
         }
     }
 
-    class vmExampleCameraDraw : ObservableObject , IExample
+    class vmExampleCameraDraw : ObservableObject, IExample
     {
         public string ExampleName => "카메라";
         public short ExampleNum => 0;
@@ -75,11 +75,11 @@ namespace BasicTemplate.Example
                         using (var Searcher = new ManagementObjectSearcher("SELECT * FROM Win32_PnPEntity WHERE PNPClass = 'Camera'"))
                         {
                             var Cameras = Searcher.Get().Cast<ManagementBaseObject>().ToList();
-                            
-                            for(int i = 0; i < Cameras.Count(); i++)
+
+                            for (int i = 0; i < Cameras.Count(); i++)
                             {
-                                ListCamera.Add(new vmSlotCamera( 
-                                    _DeviceIdx : i,
+                                ListCamera.Add(new vmSlotCamera(
+                                    _DeviceIdx: i,
                                     _PnpName: Cameras[i]["Caption"].ToString())
                                     );
                             }
@@ -90,28 +90,9 @@ namespace BasicTemplate.Example
             }
         }
 
-        private ICommand _AddCameraSessCmd;
-        public ICommand AddCameraSessCmd
-        {
-            get
-            {
-                if (_AddCameraSessCmd == null)
-                    _AddCameraSessCmd = new BaseCommand(p =>
-                    {
-                        var TargetCameraSess = (vmSlotCamera)p;
-
-                        if (ListCamera.Contains(TargetCameraSess))
-                            return;
-                        else
-                            ListCamera.Add(TargetCameraSess);
-
-                    });
-                return _AddCameraSessCmd;
-            }
-        }
 
 
-        public vmExampleCameraDraw() 
+        public vmExampleCameraDraw()
         {
             ListCamera = new ObservableCollection<vmSlotCamera>();
 
@@ -120,6 +101,12 @@ namespace BasicTemplate.Example
             DisplaySess = new vmGridCameraSess();
             ListSess = new vmListviewDraggable(ListCamera);
 
+
+
         }
+
+
+
+
     }
 }

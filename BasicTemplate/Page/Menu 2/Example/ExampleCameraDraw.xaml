@@ -24,7 +24,9 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <Control:ListviewDraggable Grid.Column="0"
-                                       DataContext="{Binding ListSess}"/>
+                                       DataContext="{Binding ListSess}"
+                                       TargetTodoItem="{Binding TargetCamera}"
+                                       TodoItemDropCommand="{Binding AddCameraSessCmd}"/>
             <Control:GridCameraSess Grid.Column="1"
                                     DataContext="{Binding DisplaySess}"/>
         </Grid>

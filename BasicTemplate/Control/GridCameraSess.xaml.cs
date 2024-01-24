@@ -21,20 +21,23 @@ namespace BasicTemplate.Control
     /// </summary>
     public partial class GridCameraSess : UserControl
     {
-        private void ItemMouseMove(object sender, MouseEventArgs e)
-        {
-            if (e.LeftButton == MouseButtonState.Released && sender is FrameworkElement frameworkElement)
-            {
-                object todoItem = frameworkElement.DataContext;
-
-            }
-        }
 
 
         public GridCameraSess()
         {
             InitializeComponent();
         }
+
+
+        private void Grid_Drop(object sender, DragEventArgs e)
+        {
+            HitTestResult result = VisualTreeHelper.HitTest(DisplayGrid, e.GetPosition(DisplayGrid));
+
+            object data = e.Data.GetData(DataFormats.Serializable);
+
+            int a = 1;
+        }
+
 
     }
 
@@ -44,10 +47,19 @@ namespace BasicTemplate.Control
                 DependencyProperty.Register("AddItem", typeof(object), typeof(ListviewDraggable),
             new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
+        public ICommand AddCameraSessCmd { get; }
 
         public vmGridCameraSess() 
         {
 
+            AddCameraSessCmd = new BaseCommand(aaa);
+        }
+
+
+
+        public void aaa(object sender)
+        {
+            var TargetCameraSess = (vmSlotCamera)sender;
 
         }
     }

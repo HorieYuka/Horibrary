@@ -8,27 +8,9 @@
              d:DesignHeight="450"
              d:DesignWidth="800">
 
-    <Grid AllowDrop="True"
-          MouseMove="ItemMouseMove">
-        <Grid.RowDefinitions>
-            <RowDefinition />
-            <RowDefinition />
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition />
-            <ColumnDefinition />
-        </Grid.ColumnDefinitions>
-        <ContentControl Grid.Row="0"
-                        Grid.Column="0"
-                        Content="{Binding CameraShow[0]}" />
-        <ContentControl Grid.Row="0"
-                        Grid.Column="1"
-                        Content="{Binding CameraShow[1]}" />
-        <ContentControl Grid.Row="1"
-                        Grid.Column="0"
-                        Content="{Binding CameraShow[2]}" />
-        <ContentControl Grid.Row="1"
-                        Grid.Column="1"
-                        Content="{Binding CameraShow[3]}" />
+    <Grid x:Name="DisplayGrid" AllowDrop="True"
+          Background="Transparent"
+               Drop="Grid_Drop">
     </Grid>
+
 </UserControl>

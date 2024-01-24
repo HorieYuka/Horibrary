@@ -22,17 +22,31 @@ namespace BasicTemplate.Control
     /// </summary>
     public partial class ListviewDraggable : UserControl
     {
+        public static readonly DependencyProperty TodoItemDropCommandProperty =
+    DependencyProperty.Register("TodoItemDropCommand", typeof(ICommand), typeof(ListviewDraggable),
+        new PropertyMetadata(null));
+
+        public static readonly DependencyProperty TargetTodoItemProperty =
+    DependencyProperty.Register("TargetTodoItem", typeof(object), typeof(ListviewDraggable),
+        new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+
+        public object TargetTodoItem
+        {
+            get { return (object)GetValue(TargetTodoItemProperty); }
+            set { SetValue(TargetTodoItemProperty, value); }
+        }
+
+        public ICommand TodoItemDropCommand
+        {
+            get { return (ICommand)GetValue(TodoItemDropCommandProperty); }
+            set { SetValue(TodoItemDropCommandProperty, value); }
+        }
 
         public ListviewDraggable()
         {
             InitializeComponent();
         }
 
-
-        private void ListDragOver(object sender, DragEventArgs e)
-        {
-
-        }
 
         private void ItemMouseMove(object sender, MouseEventArgs e)
         {
@@ -45,24 +59,36 @@ namespace BasicTemplate.Control
                     new DataObject(DataFormats.Serializable, todoItem),
                     DragDropEffects.Move);
 
-
             }
         }
 
-        private void ItemDragOver(object sender, DragEventArgs e)
-        {
-
-        }
 
     }
 
-    class vmListviewDraggable
+    class vmListviewDraggable : ObservableObject
     {
         public ObservableCollection<vmSlotCamera> ListCamera { get; set; }
+
+        private vmSlotCamera _TargetCamera;
+        public vmSlotCamera TargetCamera
+
+        {
+            get => _TargetCamera;
+            set
+            {
+                _TargetCamera = value;
+                OnPropertyChanged("TargetCamera");
+            }
+        }
+
 
         public vmListviewDraggable(ObservableCollection<vmSlotCamera> _ListCamera)
         {
             ListCamera = _ListCamera;
+
+
         }
+
+
     }
 }
