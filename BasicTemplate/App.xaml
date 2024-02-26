@@ -51,6 +51,9 @@
             <DataTemplate DataType="{x:Type Example:vmExampleGPIB}">
                 <Example:ExampleGPIB />
             </DataTemplate>
+            <DataTemplate DataType="{x:Type Example:vmExampleCameraDraw}">
+                <Example:ExampleCameraDraw />
+            </DataTemplate>
 
 
             <!--Controls-->
@@ -69,6 +72,16 @@
             <DataTemplate DataType="{x:Type Control:vmSlotGPIB}">
                 <Control:SlotGPIB />
             </DataTemplate>
+            <DataTemplate DataType="{x:Type Control:vmSlotCamera}">
+                <Control:SlotCamera />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type Control:vmListviewDraggable}">
+                <Control:ListviewDraggable />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type Control:vmGridCameraSess}">
+                <Control:GridCameraSess />
+            </DataTemplate>
+
 
             <!--Styles-->
             <!-- Low opacity FAB -->

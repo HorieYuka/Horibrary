@@ -30,7 +30,6 @@ namespace BasicTemplate.Control
 
     class vmSlotCOM : ObservableObject
     {
-
         public int Idx { get; set; }
         public string Port { get; set; }
         public string Name { get; set; }

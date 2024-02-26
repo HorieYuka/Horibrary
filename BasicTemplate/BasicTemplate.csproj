@@ -12,16 +12,12 @@
   <ItemGroup>
     <Compile Remove="Page\Menu 1\Control\**" />
     <Compile Remove="Page\Menu 1\Example - 복사\**" />
-    <Compile Remove="Page\Menu 3\Control\**" />
     <EmbeddedResource Remove="Page\Menu 1\Control\**" />
     <EmbeddedResource Remove="Page\Menu 1\Example - 복사\**" />
-    <EmbeddedResource Remove="Page\Menu 3\Control\**" />
     <None Remove="Page\Menu 1\Control\**" />
     <None Remove="Page\Menu 1\Example - 복사\**" />
-    <None Remove="Page\Menu 3\Control\**" />
     <Page Remove="Page\Menu 1\Control\**" />
     <Page Remove="Page\Menu 1\Example - 복사\**" />
-    <Page Remove="Page\Menu 3\Control\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -30,6 +26,8 @@
 
   <ItemGroup>
     <PackageReference Include="Emgu.CV" Version="4.8.1.5350" />
+    <PackageReference Include="Emgu.CV.runtime.windows" Version="4.8.1.5350" />
+    <PackageReference Include="gong-wpf-dragdrop" Version="3.2.1" />
     <PackageReference Include="MaterialDesignThemes" Version="4.9.0" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.77" />
     <PackageReference Include="ScottPlot.WPF" Version="4.1.70" />
@@ -42,7 +40,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Page\Menu 3\" />
     <Folder Include="Reference\" />
   </ItemGroup>
 

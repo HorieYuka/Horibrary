@@ -64,7 +64,6 @@ namespace BasicTemplate.Example
             }
         }
 
-
         private ICommand _FindCOMs;
         public ICommand FindCOMs
         {

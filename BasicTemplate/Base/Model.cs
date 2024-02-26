@@ -51,6 +51,46 @@ namespace BasicTemplate.Base
         }
     }
 
+    class PaletteDataModel : ObservableObject
+    {
+        public event EventHandler UpdateOptEvt;
+
+        private short _Alpha;
+        public short Alpha
+        {
+            get => _Alpha;
+            set
+            {
+                _Alpha = value;
+                TellValueChanged();
+                OnPropertyChanged("Alpha");
+            }
+        }
+
+
+        private short _ColorWidth;
+        public short ColorWidth
+        {
+            get => _ColorWidth;
+            set
+            {
+                _ColorWidth = value;
+                TellValueChanged();
+                OnPropertyChanged("ColorWidth");
+            }
+        }
+
+        public PaletteDataModel()
+        {
+            Alpha = 100;
+            ColorWidth = 25;
+        }
+
+        private void TellValueChanged()
+            => UpdateOptEvt?.Invoke(null, new EventArgs());
+
+    }
+
 
     #region Constant for Examples
 

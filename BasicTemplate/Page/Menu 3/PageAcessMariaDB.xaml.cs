@@ -19,21 +19,21 @@ using System.Windows.Shapes;
 namespace BasicTemplate.Page
 {
     /// <summary>
-    /// PageDeviceControl.xaml에 대한 상호 작용 논리
+    /// PageAcessMariaDB.xaml에 대한 상호 작용 논리
     /// </summary>
-    public partial class PageDeviceControl : UserControl
+    public partial class PageAcessMariaDB : UserControl
     {
-        public PageDeviceControl()
+        public PageAcessMariaDB()
         {
             InitializeComponent();
         }
     }
 
-    class vmPageDeviceControl : ObservableObject, IPage
+    class vmPageAcessMariaDB : ObservableObject
     {
         public PackIconKind PageIcon => PackIconKind.DeveloperBoard;
-        public string PageName => "장치";
-        public short PageNum => 4;
+        public string PageName => "MariaDB";
+        public short PageNum => 2;
 
         public List<IExample> ExampleList { get; set; }
 
@@ -48,18 +48,15 @@ namespace BasicTemplate.Page
             }
         }
 
-        internal vmPageDeviceControl()
+        public vmPageAcessMariaDB() 
         {
             // Create examples
+            ExampleList = new List<IExample>();
             ExampleList =
             [
-                new vmExampleCOM(),
-                new vmExampleGPIB(),
-                new vmExampleCameraDraw()
+                new vmExampleCommonDB(),
+                new vmExampleVirusDetect()
             ];
-            
-
         }
-
     }
 }

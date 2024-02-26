@@ -1,7 +1,7 @@
 ﻿#pragma once
 
-#include "C:\repo\HorieYuka\Horibrary\LibraryVISA\LibraryVISA.h"
-#include "C:\repo\HorieYuka\Horibrary\LibraryVISA\LibraryVISA.cpp"
+#include "C:\Repos\Horibrary\LibraryVISA\LibraryVISA.h"
+#include "C:\Repos\Horibrary\LibraryVISA\LibraryVISA.cpp"
 
 namespace Wrapper {
 	public ref class LibraryVISA
