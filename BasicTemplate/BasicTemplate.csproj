@@ -12,16 +12,12 @@
   <ItemGroup>
     <Compile Remove="Page\Menu 1\Control\**" />
     <Compile Remove="Page\Menu 1\Example - 복사\**" />
-    <Compile Remove="Page\Menu 3\**" />
     <EmbeddedResource Remove="Page\Menu 1\Control\**" />
     <EmbeddedResource Remove="Page\Menu 1\Example - 복사\**" />
-    <EmbeddedResource Remove="Page\Menu 3\**" />
     <None Remove="Page\Menu 1\Control\**" />
     <None Remove="Page\Menu 1\Example - 복사\**" />
-    <None Remove="Page\Menu 3\**" />
     <Page Remove="Page\Menu 1\Control\**" />
     <Page Remove="Page\Menu 1\Example - 복사\**" />
-    <Page Remove="Page\Menu 3\**" />
   </ItemGroup>
 
   <ItemGroup>
