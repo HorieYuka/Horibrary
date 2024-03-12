@@ -131,6 +131,17 @@
                 <Setter Property="MaterialDesign:ValidationAssist.Suppress"
                         Value="True" />
             </Style>
+            
+            <!-- General textbox properties -->
+            <Style x:Key="GeneralTextboxStyle"
+                   BasedOn="{StaticResource MaterialDesignOutlinedTextBox}"
+                   TargetType="{x:Type TextBox}">
+                <Setter Property="MaterialDesign:TextFieldAssist.CharacterCounterStyle">
+                    <Setter.Value>
+                        <Style TargetType="TextBlock" />
+                    </Setter.Value>
+                </Setter>
+            </Style>
 
         </ResourceDictionary>
     </Application.Resources>
