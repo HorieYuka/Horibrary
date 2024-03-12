@@ -27,8 +27,11 @@ namespace BasicTemplate.Example
         }
     }
 
-    class vmExampleVirusDetect : ObservableObject
+    class vmExampleVirusDetect : ObservableObject, IExample
     {
+        public string ExampleName => "AMSI 처리";
+        public short ExampleNum => 0;
+
         public vmExampleVirusDetect()
         {
 
