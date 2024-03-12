@@ -1,4 +1,5 @@
-﻿using MySql.Data.MySqlClient;
+﻿using Emgu.CV;
+using MySql.Data.MySqlClient;
 using Renci.SshNet;
 using Renci.SshNet.Sftp;
 using System;
@@ -8,6 +9,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.Eventing.Reader;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -28,6 +30,7 @@ namespace BasicTemplate.Base
         private const string ServerPort = "*PORT*";
         private const string DB = "*DBNAME*";
 
+        private const string UserTable = "*UserTable*";
         private const string FileTable = "*FileTable*";
 
         private const int ScanTimeout = 30000;
@@ -38,8 +41,8 @@ namespace BasicTemplate.Base
                                             "Port = {1};" +
                                             "Database = {2};" +
                                             "Uid = {3};" +
-                                            "Pwd = {4};", 
-                                            ServerIP,ServerPort,DB,Id, Pwd);
+                                            "Pwd = {4};",
+                                            ServerIP, ServerPort, DB, Id, Pwd);
 
             try
             {
@@ -52,7 +55,7 @@ namespace BasicTemplate.Base
                 // Does user have auth?
                 MySqlCommand Cmd = new MySqlCommand(
                     // Query
-                    string.Format("SELECT * FROM {0}.UserInfoList WHERE UserName IN('{0}')", Id)
+                    string.Format("SELECT * FROM {0}.{1} WHERE UserName IN('{2}')", DB, UserTable, Id)
                     // Connection
                     , UserConn
                     );
@@ -75,14 +78,45 @@ namespace BasicTemplate.Base
             }
         }
 
-
-        public static UploadResult UploadFile(string Id, string Filename, string BasePath)
+        public static List<FileInfoModel> GetFileList(string BasePath)
         {
-            short Out;
+            List<FileInfoModel> Out = new List<FileInfoModel>();
+
+            MySqlCommand Cmd = new MySqlCommand(
+                // Query
+                string.Format("SELECT * FROM {0}.{1} WHERE FilePath IN('{2}')", DB, FileTable, BasePath)
+                // Connection
+                , UserConn
+                );
+
+            using (MySqlDataReader Reader = Cmd.ExecuteReader())
+            {
+                if (Reader.Read())
+                {
+                    FileInfoModel FModel = new FileInfoModel();
+                    FModel.CreateDate = Reader.GetDateTime("CreateDate");
+                    FModel.FilePath = Reader.GetString("FilePath");
+                    FModel.UploadUser = Reader.GetString("UploadUser");
+                    FModel.ScanID = Reader.GetString("ScanID");
+                    FModel.SecurityID = Reader.GetString("SecurityID");
+                    FModel.bIsDirectory = Reader.GetBoolean("IsDirectory");
+
+                    Out.Add(FModel);
+                }
+            }
+
+            return Out;
+        }
+
+
+        public static UploadResult UploadFile(string Id, string Fullname, string BasePath)
+        {
+            string[] Split = Fullname.Split(new string[] { "/" }, StringSplitOptions.None);
+
+            string Filename = Split[Split.Count() - 1];
 
             using (SftpClient SFTP = new SftpClient(SFTPConn))
             {
-
                 // Check there is a duplicated file.
                 bool bFileExist = false;
 
@@ -101,14 +135,14 @@ namespace BasicTemplate.Base
                 }
 
                 // Check malware.
-                if (!File.Exists(Filename))
+                if (!File.Exists(Fullname))
                 {
                     return UploadResult.FileNotFound;
                 }
 
                 var _Process = new Process();
 
-                string Arg = string.Format("-Scan -ScanType 3 -File \"{0}\"", Filename);
+                string Arg = string.Format("-Scan -ScanType 3 -File \"{0}\"", Fullname);
 
                 var _StartInfo = new ProcessStartInfo("C:\\program files\\windows defender\\mpcmdrun.exe")
                 {
@@ -154,17 +188,13 @@ namespace BasicTemplate.Base
 
                 EventList.Reverse();
 
-
-
                 // Try uploading...
                 foreach (SftpFile F in Files)
                 {
                     if (F.IsDirectory) continue;
                     else
                     {
-                        string[] Sp = F.Name.Split(new string[] { "." }, StringSplitOptions.None);
-
-                        if (Sp[0] == Filename)
+                        if (F.Name == Filename)
                             bFileExist = true;
                     }
 
@@ -176,21 +206,22 @@ namespace BasicTemplate.Base
                         SFTP.UploadFile(_FileStream, BasePath + "/" + Filename);
 
                     using (
-                    MySqlCommand Cmd = new MySqlCommand(
+                        MySqlCommand Cmd = new MySqlCommand(
                         // Query
                         string.Format("INSERT INTO " + FileTable +
-                            " (CreateDate, UploadUser, Filename, ScanID, SecurityID) " +
-                            "VALUES(@CreateDate, @UploadUser, @Filename, @ScanID, @SecurityID)")
+                            " (CreateDate, UploadUser, Filename, ScanID, IsDirectory, FilePath, SecurityID) " +
+                            "VALUES(@CreateDate, @UploadUser, @Filename, @IsDirectory, @FilePath @ScanID, @SecurityID)")
                         // Connection
                         , UserConn
-                        )
-                    )
+                        ))
                     {
                         Cmd.Parameters.AddWithValue("@CreateDate", DateTime.Now);
                         Cmd.Parameters.AddWithValue("@UploadUser", UserConn);
                         Cmd.Parameters.AddWithValue("@Filename", Id);
+                        Cmd.Parameters.AddWithValue("@FilePath", BasePath);
                         Cmd.Parameters.AddWithValue("@ScanID", (string)EventList[0].Properties[2].Value);
                         Cmd.Parameters.AddWithValue("@SecurityID", (string)EventList[0].Properties[9].Value);
+                        Cmd.Parameters.AddWithValue("@IsDirectory", false);
 
                         Cmd.ExecuteNonQuery();
                     };
@@ -198,50 +229,28 @@ namespace BasicTemplate.Base
 
                     return UploadResult.UploadeComplete;
                 }
-
-                return UploadResult.Error;
+                else
+                    return UploadResult.AnotherFileExists;
             }
 
-        }
-        private enum ScanResult
-        {
-            [Description("No threat found")]
-            NoThreatFound,
-
-            [Description("Threat found")]
-            ThreatFound,
-
-            [Description("The file could not be found")]
-            FileNotFound,
-
-            [Description("Timeout")]
-            Timeout,
-
-            [Description("Error")]
-            Error
         }
 
     }
 
     public enum UploadResult
     {
-        [Description("Upload complete")]
         UploadeComplete,
 
-        [Description("Another file exists")]
         AnotherFileExists,
 
-        [Description("File not found")]
         FileNotFound,
 
-        [Description("Malware detected")]
         MalwareDetected,
 
-        [Description("Timeout")]
         Timeout,
 
-        [Description("Error")]
         Error
     }
+
 
 }

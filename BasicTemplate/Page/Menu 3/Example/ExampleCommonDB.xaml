@@ -74,7 +74,7 @@
             <ScrollViewer Grid.Row="4">
                 <ListView HorizontalContentAlignment="Stretch"
                           SelectedItem="{Binding FileInfo}"
-                          ItemsSource="{Binding FileList}" />
+                          ItemsSource="{Binding ListFile}" />
             </ScrollViewer>
         </Grid>
     </GroupBox>

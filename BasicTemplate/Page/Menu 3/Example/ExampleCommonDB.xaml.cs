@@ -1,8 +1,13 @@
 ﻿using BasicTemplate.Base;
+using BasicTemplate.Control;
+using Emgu.CV;
+using Microsoft.WindowsAPICodePack.Dialogs;
 using Org.BouncyCastle.Asn1.Cms;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -40,6 +45,8 @@ namespace BasicTemplate.Example
         public string ExampleName => "기본적인 DBMS 동작";
         public short ExampleNum => 0;
 
+        public ObservableCollection<vmSlotCamera> ListFile { get; set; }
+
         public string Id { private get; set; }
         // Set "private get" for hiding Password and this way should not break MVVM rules.
         public string Password { private get; set; }
@@ -50,6 +57,8 @@ namespace BasicTemplate.Example
 
         public vmExampleCommonDB()
         {
+            ListFile = new ObservableCollection<vmSlotCamera>();
+
             LoginWorker = new BackgroundWorker();
             LoginWorker.DoWork += LoginAttempt;
         }
@@ -67,6 +76,15 @@ namespace BasicTemplate.Example
                 if (_UploadFileCmd == null)
                     _UploadFileCmd = new BaseCommand(p =>
                     {
+                        CommonOpenFileDialog Dlog = new CommonOpenFileDialog();
+                        Dlog.IsFolderPicker = true;
+                        Dlog.Multiselect = true;
+
+                        if (Dlog.ShowDialog() == CommonFileDialogResult.Ok)
+                        {
+                            foreach (string F in Dlog.FileNames)
+                                DBMS.UploadFile(Id, F, BasePath);
+                        }
                     });
                 return _UploadFileCmd;
             }

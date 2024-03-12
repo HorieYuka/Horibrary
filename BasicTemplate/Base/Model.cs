@@ -91,6 +91,89 @@ namespace BasicTemplate.Base
 
     }
 
+    class FileInfoModel : ObservableObject
+    {
+        private DateTime _CreateDate;
+        public DateTime CreateDate
+        {
+            get => _CreateDate;
+            set
+            {
+                _CreateDate = value;
+                OnPropertyChanged("CreateDate");
+            }
+        }
+
+        private string _UploadUser;
+        public string UploadUser
+        {
+            get => _UploadUser;
+            set
+            {
+                _UploadUser = value;
+                OnPropertyChanged("UploadUser");
+            }
+        }
+
+        private string _Filename;
+        public string Filename
+        {
+            get => _Filename;
+            set
+            {
+                _Filename = value;
+                OnPropertyChanged("Filename");
+            }
+        }
+
+        private string _FilePath;
+        public string FilePath
+        {
+            get => _FilePath;
+            set
+            {
+                _FilePath = value;
+                OnPropertyChanged("FilePath");
+            }
+        }
+
+        private bool _bIsDirectory;
+        public bool bIsDirectory
+        {
+            get => _bIsDirectory;
+            set
+            {
+                _bIsDirectory = value;
+                OnPropertyChanged("bIsDirectory");
+            }
+        }
+
+
+        private string _ScanID;
+        public string ScanID
+        {
+            get => _ScanID;
+            set
+            {
+                _ScanID = value;
+                OnPropertyChanged("ScanID");
+            }
+        }
+
+        private string _SecurityID;
+        public string SecurityID
+        {
+            get => _SecurityID;
+            set
+            {
+                _SecurityID = value;
+                OnPropertyChanged("SecurityID");
+            }
+        }
+
+
+    }
+
 
     #region Constant for Examples
 
